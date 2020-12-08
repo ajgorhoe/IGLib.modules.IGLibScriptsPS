@@ -27,8 +27,10 @@ if %IsDefinedModuleDir% EQU 0 (
     if "%ModuleContainingDir%" NEQ "" (
 	  if defined ModuleDirRelative (
 	    if "%ModuleDirRelative%" NEQ "" (
+		  echo Inferred module directory (ModuleDir):
 		  set ModuleDir=%ModuleContainingDir%\%ModuleDirRelative%
 		  set IsDefinedModuleDir=1
+		  echo   %ModuleDir%
 		)
 	  )
 	)
