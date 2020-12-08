@@ -2,34 +2,69 @@
 @echo off
 setlocal
 
+if defined ScriptDir (
+  if "%ScriptDir%" NEQ "" (
+    rem Store eventual directory of the calling script to use it in settings:
+    set CallingScriptDir=%ScriptDir%
+  )
+)
 set InitialDir = %CD%
-set ScriptDir=
+set ScriptDir=%~dp0
+awr SettingsScriptName=Settings_UpdateModule.bat
+set SettingsScript=%ScriptDir%%SettingsScriptName%
+rem Reset error information (undefine aux. variables):
+set StoredErrorLevel=
+set ErrorMessage=
 
 
-echo.
-echo Updating module %CheckoutDir%
-echo   in:     %ScriptDir%
-echo   repo:   %RepositoryAddress%
-echo   branch: %CheckoutBranch%
-echo.
+echo ====
+if defined ModuleDirRelative (
+  echo Updating module %ModuleDirRelative% ...
+) else (
+  echo Updating module ...
+)
+if defined ContainingDir (
+  echo   in:     %ContainingDir%
+)
+if defined RepositoryAddress (
+  echo   repo:   %RepositoryAddress%
+)
+if defined CheckoutBranch (
+  echo   branch: %CheckoutBranch%
+)
+if defined ModuleDir (
+  echo Module directory:
+    "%ModuleDir%"
+)
 
-if not defined ScriptDir (
-  echo ERROR: ScriptDir not defined!
+echo Resolving parameters...
+if not exist "%SettingsScript%" (
   echo.
+  echo In %0:
+  echo INVALID OPERATION: Settings script does not exist:
+  echo   %SettingsScript%
+  echo Please ensure that settings script is located in the same directory
+  echo as the script!
+  echo.
+  set StoredErrorLevel=1
+  set ErrorMessage=Settings script %SettingsScriptName% could not be located.
+  set 
+  goto finalize
+)
+call "%SettingsScript%"
+
+rem Report errors when necessary parameters are not defined:
+if %IsDefinedRepositoryAddress% EQU 0 (
+  set StoredErrorLevel=1
+  set ErrorMessage=Repository address is not defined.
+  goto finalize
+)
+if %IsDefinedModuleDir% EQU 0 (
+  set StoredErrorLevel=1
+  set ErrorMessage=Module's working directory is not defined.
   goto finalize
 )
 
-if not defined RepositoryAddress (
-  echo ERROR: RepositoryAddress not defined!
-  echo.
-  goto finalize
-)
-
-if not defined CheckoutBranch (
-  echo ERROR: CheckoutBranch not defined!
-  echo.
-  goto finalize
-)
 
 rem See e.g.:
 rem https://stackoverflow.com/questions/10312521/how-to-fetch-all-git-branches
@@ -41,35 +76,108 @@ echo Initializing scripts/ directory...
 echo   at: %ScriptDir%
 echo.
 
-if not exist "%CheckoutDir%\.git" (
-  if exist "%CheckoutDir% (
+rem To reset error level if set:
+ver > nul
+if not exist "%ModuleDir%\.git" (
+  if exist "%ModuleDir% (
     echo.
     echo WARNING: Directory already exists: 
-	echo   %CheckoutDir%
+	echo   %ModuleDir%
 	echo Operation may fail and you may need to remove the following dir.:
-	echo   %ScriptDir%\%CheckoutDir%
+	echo   %ModuleDir%
 	echo.
   )
   echo Repository not yet checked out, cloning the code...
-  call git clone %RepositoryAddress% %CheckoutDir%
+  call git clone %RepositoryAddress% %ModuleDir%
+  if %ERRORLEVEL% NEQ 0 (
+    set StoredErrorLevel=1
+	set ErrorMessage=Could not clone the repository.
+  )
   call git remote add origin %RepositoryAddress%
   echo.
 )
 
-cd %CheckoutDir%
-call git fetch --all
-call git pull --all
-
-if defined CheckoutBranch (
-  call git checkout --track origin/%CheckoutBranch%
-  call git pull
+ver > nul
+cd %ModuleDir%
+if %ERRORLEVEL% NEQ 0 (
+    set StoredErrorLevel=1
+	if not defined ErrorMessage (
+	  set ErrorMessage=Could not clone the repository.
+	)
+) else
+(
+  call git fetch --all
+  if %ERRORLEVEL% NEQ 0 (
+    set StoredErrorLevel=1  
+	if not defined ErrorMessage (
+	  set ErrorMessage=Fetching from repository failed.
+	)
+  )
+  ver > nul
+  call git pull --all
+  ver > nul
+  if IsDefinedCheckoutBranch NEQ 0 (
+    call git checkout --track origin/%CheckoutBranch%
+	ver > nul
+    call git pull origin/%CheckoutBranch%
+    if %ERRORLEVEL% NEQ 0 (
+      set StoredErrorLevel=1  
+	  if not defined ErrorMessage (
+	    set ErrorMessage=Pulling remote branch %CheckoutBranch% failed.
+	  )
+    )
+  )
 )
-
 
 
 :finalize
 
-cd %InitialDir%
+rem Output the settings used, if specified by env. variable:
+if defined PrintSettingsInScripts (
+  if %% NEQ 0 (
+    echo.
+    echo _____________________________________
+    echo Module update script - SETTINGS used:
+    call %ScriptDir%%PrintSettings_UpdateModule.bat% %*
+    echo _____________________________________
+    echo.
+  )
+)
 
+rem restore current directory and environment to state before the call:
+cd %InitialDir%
 endlocal
+
+rem Error reporting:
+set IsDefinedStoredErrorLevel=0
+if defined StoredErrorLevel (
+  if %StoredErrorLevel% NEQ 0 (
+	set ERRORLEVEL=%StoredErrorLevel%
+	set IsDefinedStoredErrorLevel=1
+  ) else (
+    rem Undefine if 0:
+    set StoredErrorLevel=
+  )
+)
+if %ERRORLEVEL% NEQ 0 (
+  echo.
+  echo An ERROR occurred in %0:
+  if %IsDefinedStoredErrorLevel% NEQ 0 (
+    echo   StoredErrorLevel = %StoredErrorLevel%
+  ) else (
+    echo ERRORLEVEL: %ERRORLEVEL%
+  )
+  if defined ErrorMessage (
+    if "%ErrorMessage%" NEQ "" (
+      echo   Error message: %ErrorMessage%
+	)
+  )
+  echo.
+  if %IsDefinedStoredErrorLevel% NEQ 0 (
+    rem Also properly propagate error level to the calling environment:
+    exit /b %StoredErrorLevel%
+  )
+)
+
+
 
