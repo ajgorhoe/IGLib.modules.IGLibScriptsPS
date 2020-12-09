@@ -14,32 +14,58 @@ set CheckoutBranch=master
 set ScriptDir=%~dp0
 set InitialDir=%CD%
 
-cd %ScriptDir%
+set ContainingDir=%ScriptDir%
 
-if not exist "%CheckoutDir%\.git" (
-  if exist "%CheckoutDir% (
+cd %ContainingDir%
+
+echo.
+echo.
+echo Initializing the scritp directory:
+echo   %ContainingDir%\%CheckoutDir%
+echo   Repository: %RepositoryAddress%
+echo   Branch: %CheckoutBranch%
+
+if not exist "%CheckoutDir%\.git\" (
+  echo Repository not cloned yet.
+  if exist "%CheckoutDir%" (
     echo.
-    echo WARNING: Directory already exists: 
+    echo WARNING: Checkout directory already exists: 
 	echo   %CheckoutDir%
-	echo Operation may fail and you may need to remove the following dir.:
-	echo   %ScriptDir%\%CheckoutDir%
+	echo Git operations may fail and you may need to remove the following  dir.:
+	echo   %ContainingDir%\%CheckoutDir%
 	echo.
   )
-  echo Repository not yet checked out, cloning the code...
+  echo Cloning repository...
   call git clone %RepositoryAddress% %CheckoutDir%
-  call git remote add origin %RepositoryAddress%
   echo.
 )
 
+echo Changing to checkout directory...
 cd %CheckoutDir%
-call git fetch --all
-call git pull --all
+
+echo Adding remote origin...
+call git remote add origin %RepositoryAddress%
+
+echo Fetching remote branches from origin...
+call git fetch origin
+rem echo Pulling remote branches from origin...
+rem call git pull origin
 
 if defined CheckoutBranch (
+  echo Checking out remote %CheckoutBranch% and track...
   call git checkout --track origin/%CheckoutBranch%
-  call git pull
+  echo Checking out without -- track parameter in case already tracked...
+  call git checkout %CheckoutBranch%
+  echo pulling %CheckoutBranch%...
+  call git pull origin %CheckoutBranch%
+) else (
+  REM echo Pulling all tracked branches...
+  REM call git pull origin
 )
 
+
+:finalize
+echo.
 
 cd %InitialDir%
 
