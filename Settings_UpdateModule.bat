@@ -2,10 +2,14 @@
 @echo off
 rem Sets locations of various scripts, etc.
 
+
+rem echo SETTINGS before calling settings.bat
+
+
 if not exist "%~dp0\Settings.bat" (
   echo.
-  echo ERROR (non-fatal):
-  echo Base settings script (Settings.bat) coulld not be located.
+  echo ERROR - non-fatal:
+  echo Base settings script, Settings.bat, coulld not be located.
   echo In: %0
   echo Expected at: 
   echo   %~dp0\Settings.bat
@@ -14,12 +18,18 @@ if not exist "%~dp0\Settings.bat" (
   call "%~dp0\Settings.bat"
 )
 
+rem echo SETTINGS after calling settings.bat
+
+
 set IsDefinedModuleDir=0
 if defined ModuleDir (
   if "%ModuleDir%" NEQ "" (
-    IsDefinedModuleDir=1
+    set IsDefinedModuleDir=1
   )
 )
+
+rem echo SETTINGS after setting IsDefinedModuleDir
+
 
 if %IsDefinedModuleDir% EQU 0 (
   rem Module directory is not defined, try to infer it from other variables:
@@ -27,7 +37,7 @@ if %IsDefinedModuleDir% EQU 0 (
     if "%ModuleContainingDir%" NEQ "" (
 	  if defined ModuleDirRelative (
 	    if "%ModuleDirRelative%" NEQ "" (
-		  echo Inferred module directory (ModuleDir):
+		  echo Inferred module directory ModuleDir:
 		  set ModuleDir=%ModuleContainingDir%\%ModuleDirRelative%
 		  set IsDefinedModuleDir=1
 		  echo   %ModuleDir%
@@ -37,18 +47,21 @@ if %IsDefinedModuleDir% EQU 0 (
   )
 )
 
+rem echo SETTINGS after inferring ModuleDir
+
+
 rem Establish which parameters are defined:
 set IsDefinedRepositoryAddress=0
 if defined RepositoryAddress (
   if "%RepositoryAddress%" NEQ "" (
-    IsDefinedRepositoryAddress=1
+    set IsDefinedRepositoryAddress=1
   )
 )
 
 set IsDefinedCheckoutBranch=0
 if defined CheckoutBranch (
   if "%CheckoutBranch%" NEQ "" (
-    IsDefinedCheckoutBranch=1
+    set IsDefinedCheckoutBranch=1
   )
 )
 
@@ -88,9 +101,6 @@ if "%~3" NEQ "" (
 )
 
 
-
-
-
-
+rem echo SETTINGS END
 
 

@@ -10,7 +10,7 @@ if defined ScriptDir (
 )
 set InitialDir = %CD%
 set ScriptDir=%~dp0
-awr SettingsScriptName=Settings_UpdateModule.bat
+set SettingsScriptName=Settings_UpdateModule.bat
 set SettingsScript=%ScriptDir%%SettingsScriptName%
 rem Reset error information (undefine aux. variables):
 set StoredErrorLevel=
@@ -34,7 +34,7 @@ if defined CheckoutBranch (
 )
 if defined ModuleDir (
   echo Module directory:
-    "%ModuleDir%"
+  echo   "%ModuleDir%"
 )
 
 echo Resolving parameters...
@@ -51,7 +51,11 @@ if not exist "%SettingsScript%" (
   set 
   goto finalize
 )
-call "%SettingsScript%"
+echo Calling: 
+echo   call "%SettingsScript%" %*
+call "%SettingsScript%" %*
+
+rem echo UPDATEMODULE After settings
 
 rem Report errors when necessary parameters are not defined:
 if %IsDefinedRepositoryAddress% EQU 0 (
@@ -65,6 +69,9 @@ if %IsDefinedModuleDir% EQU 0 (
   goto finalize
 )
 
+rem echo UPDATEMODULE After missing definitions checks
+
+
 
 rem See e.g.:
 rem https://stackoverflow.com/questions/10312521/how-to-fetch-all-git-branches
@@ -76,15 +83,18 @@ echo Initializing scripts/ directory...
 echo   at: %ScriptDir%
 echo.
 
+rem echo UPDATEMODULE Before cloning block
+
+
 rem To reset error level if set:
 ver > nul
 if not exist "%ModuleDir%\.git" (
-  if exist "%ModuleDir% (
+  if exist "%ModuleDir%" (
     echo.
-    echo WARNING: Directory already exists: 
-	echo   %ModuleDir%
-	echo Operation may fail and you may need to remove the following dir.:
-	echo   %ModuleDir%
+    echo warning: directory already exists: 
+	echo   %moduledir%
+	echo operation may fail and you may need to remove the following dir.:
+	echo   %moduledir%
 	echo.
   )
   echo Repository not yet checked out, cloning the code...
@@ -97,6 +107,9 @@ if not exist "%ModuleDir%\.git" (
   echo.
 )
 
+rem echo UPDATEMODULE After cloning block
+
+
 ver > nul
 cd %ModuleDir%
 if %ERRORLEVEL% NEQ 0 (
@@ -104,30 +117,56 @@ if %ERRORLEVEL% NEQ 0 (
 	if not defined ErrorMessage (
 	  set ErrorMessage=Could not clone the repository.
 	)
-) else
-(
-  call git fetch --all
+	goto finalize
+)
+
+
+
+call git fetch --all
+if %ERRORLEVEL% NEQ 0 (
+  set StoredErrorLevel=1  
+  if not defined ErrorMessage (
+	set ErrorMessage=Fetching from repository failed.
+  )
+)
+  
+rem echo UPDATEMODULE After fetch
+  
+  
+  ver > nul
+  rem ?? Is this necessary - do we want this?
+  call git pull --all
+  ver > nul
+  
+rem echo UPDATEMODULE After pull
+  
+  
+if %IsDefinedCheckoutBranch% NEQ 0 (
+  call git checkout --track origin/%CheckoutBranch%
+  ver > nul
+  
+  rem echo UPDATEMODULE After checkout branch with --track
+  
+  call git checkout %CheckoutBranch%
+  ver > null
+  
+  rem echo UPDATEMODULE After plain checkout branch (no ref. to origin)
+  
+  call git pull origin %CheckoutBranch%
+  
+  rem echo UPDATEMODULE After pull origin  branch
+  
   if %ERRORLEVEL% NEQ 0 (
     set StoredErrorLevel=1  
 	if not defined ErrorMessage (
-	  set ErrorMessage=Fetching from repository failed.
+	  set ErrorMessage=Pulling remote branch %CheckoutBranch% failed.
 	)
   )
-  ver > nul
-  call git pull --all
-  ver > nul
-  if IsDefinedCheckoutBranch NEQ 0 (
-    call git checkout --track origin/%CheckoutBranch%
-	ver > nul
-    call git pull origin/%CheckoutBranch%
-    if %ERRORLEVEL% NEQ 0 (
-      set StoredErrorLevel=1  
-	  if not defined ErrorMessage (
-	    set ErrorMessage=Pulling remote branch %CheckoutBranch% failed.
-	  )
-    )
-  )
 )
+
+rem echo UPDATEMODULE After checkout block
+
+
 
 
 :finalize
@@ -138,7 +177,7 @@ if defined PrintSettingsInScripts (
     echo.
     echo _____________________________________
     echo Module update script - SETTINGS used:
-    call %ScriptDir%%PrintSettings_UpdateModule.bat% %*
+    call %ScriptDir%PrintSettings_UpdateModule.bat %*
     echo _____________________________________
     echo.
   )
@@ -159,7 +198,9 @@ if defined StoredErrorLevel (
     set StoredErrorLevel=
   )
 )
-if %ERRORLEVEL% NEQ 0 (
+if %ERRORLEVEL% EQU 0 (
+  echo Updating module completed successfully.
+) else (
   echo.
   echo An ERROR occurred in %0:
   if %IsDefinedStoredErrorLevel% NEQ 0 (
