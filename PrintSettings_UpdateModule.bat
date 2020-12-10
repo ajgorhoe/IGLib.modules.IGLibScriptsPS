@@ -27,9 +27,4 @@ echo   Arg. 3: "%~3"
 echo   Arg. 4: "%~4"
 echo.
 echo PrintSettingsInScripts: %PrintSettingsInScripts%
-echo.
-
-
-echo.
-
 
