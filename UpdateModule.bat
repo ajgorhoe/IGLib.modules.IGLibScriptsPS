@@ -148,7 +148,7 @@ if %IsDefinedCheckoutBranch% NEQ 0 (
   rem echo UPDATEMODULE After checkout branch with --track
   
   call git checkout %CheckoutBranch%
-  ver > null
+  ver > nul
   
   rem echo UPDATEMODULE After plain checkout branch (no ref. to origin)
   
