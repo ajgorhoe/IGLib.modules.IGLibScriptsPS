@@ -16,7 +16,8 @@ rem Reset error information (undefine aux. variables):
 set StoredErrorLevel=
 set ErrorMessage=
 
-
+echo.
+echo.
 echo ====
 if defined ModuleDirRelative (
   echo Updating module %ModuleDirRelative% ...
