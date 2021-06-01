@@ -18,7 +18,8 @@ set ErrorMessage=
 
 echo.
 echo.
-echo ====
+echo.
+echo ================================
 if defined ModuleDirRelative (
   echo Updating module %ModuleDirRelative% ...
 ) else (

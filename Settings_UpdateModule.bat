@@ -84,7 +84,7 @@ if "%~2" NEQ "" (
 	echo   %ModuleDir%
 	echo   replaced by: 
 	echo   %~2%
-    echo   	
+    echo.
   )
   set ModuleDir=%~2
 )
