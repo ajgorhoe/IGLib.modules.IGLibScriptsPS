@@ -36,6 +36,15 @@ if "%~1" NEQ "" (
   set ModuleDir=%~1
 )
 
+REM if not defined ModuleDir11111111111111111 (
+  REM echo Module direcory NOT DEFINED, exiting...
+  REM set StoredErrorLevel=1
+  REM set ErrorMessage=Module's directory is not defined.
+  REM goto finalize
+REM )
+
+
+
 rem Do some verifications:
 if not defined ModuleDir (
   echo Module direcory NOT DEFINED, exiting...
@@ -51,13 +60,14 @@ if not exist "%ModuleGitDir%" (
   goto finalize
 )
 
-if exist ModuleDir (
-  echo REMOVING Module directory:
-  echo   "%ModuleDir%"
-  echo Executing:
-  echo   rd /s /q "%ModuleDir%"
-  call dir .
-)
+echo REMOVING Module directory:
+echo   "%ModuleDir%"
+echo Executing:
+call   rd /s /q "%ModuleDir%"
+echo dir "%ModuleDir%"
+
+
+rem echo XXX 1  / test output
 
 
 :finalize
@@ -75,17 +85,25 @@ if defined PrintSettingsInScripts (
 )
 
 
+rem echo XXX 3  / test output
+
 rem Error reporting:
 set IsDefinedStoredErrorLevel=0
+
+rem echo XXX 3 A  / test output
+
 if defined StoredErrorLevel (
-  if %StoredErrorLevel% NEQ 0 (
+  if "%StoredErrorLevel%" NEQ 0 (
 	set ERRORLEVEL=%StoredErrorLevel%
 	set IsDefinedStoredErrorLevel=1
   ) else (
-    rem Undefine if 0:
+    rem Undefine if 0
     set StoredErrorLevel=
   )
 )
+
+rem echo XXX 4  / test output
+
 if %ERRORLEVEL% EQU 0 (
   echo Remove module completed successfully.
 ) else (
@@ -99,15 +117,19 @@ if %ERRORLEVEL% EQU 0 (
   if defined ErrorMessage (
     if "%ErrorMessage%" NEQ "" (
       echo   Error message: %ErrorMessage%
+	  rem echo XXX 9 A  / test output
 	)
   )
   echo.
   if %IsDefinedStoredErrorLevel% NEQ 0 (
     rem Also properly propagate error level to the calling environment:
+	endlocal 
+    rem echo XXX 9 B  / test output
     exit /b %StoredErrorLevel%
   )
 )
 
+rem echo XXX 10  / test output
 
 rem restore current directory and environment to state before the call:
 cd %InitialDir%
