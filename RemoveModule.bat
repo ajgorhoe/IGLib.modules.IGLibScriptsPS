@@ -93,8 +93,6 @@ echo   rd /s /q "%ModuleDir%"
 call rd /s /q "%ModuleDir%"
 
 
-rem echo XXX 1  / test output
-
 
 :finalize
 
@@ -111,12 +109,8 @@ if defined PrintSettingsInScripts (
 )
 
 
-rem echo XXX 3  / test output
-
 rem Error reporting:
 set IsDefinedStoredErrorLevel=0
-
-rem echo XXX 3 A  / test output
 
 if defined StoredErrorLevel (
   if "%StoredErrorLevel%" NEQ 0 (
@@ -127,8 +121,6 @@ if defined StoredErrorLevel (
     set StoredErrorLevel=
   )
 )
-
-rem echo XXX 4  / test output
 
 if %ERRORLEVEL% EQU 0 (
   echo Remove module completed successfully.
@@ -143,19 +135,15 @@ if %ERRORLEVEL% EQU 0 (
   if defined ErrorMessage (
     if "%ErrorMessage%" NEQ "" (
       echo   Error message: %ErrorMessage%
-	  rem echo XXX 9 A  / test output
 	)
   )
   echo.
   if %IsDefinedStoredErrorLevel% NEQ 0 (
     rem Also properly propagate error level to the calling environment:
 	endlocal 
-    rem echo XXX 9 B  / test output
     exit /b %StoredErrorLevel%
   )
 )
-
-rem echo XXX 10  / test output
 
 echo Finished module removal:
 echo   "%ModuleDir%"
