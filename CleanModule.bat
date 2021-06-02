@@ -20,6 +20,7 @@ echo.
 echo.
 echo ====
 echo.
+
 rem Take into account command-line arguments:
 if "%~1" NEQ "" (
   if defined ModuleDir (
@@ -36,41 +37,63 @@ if "%~1" NEQ "" (
   set ModuleDir=%~1
 )
 
-REM if not defined ModuleDir11111111111111111 (
-  REM echo Module direcory NOT DEFINED, exiting...
-  REM set StoredErrorLevel=1
-  REM set ErrorMessage=Module's directory is not defined.
-  REM goto finalize
-REM )
-
-
-
-rem Do some verifications:
+rem In  case ModuleDir is not defined, exit:
 if not defined ModuleDir (
+  echo.
   echo Module direcory NOT DEFINED, exiting...
+  echo.
   set StoredErrorLevel=1
   set ErrorMessage=Module's directory is not defined.
   goto finalize
 )
+
+Rem Check existence of ModuleDir. If it does not exist, combine original
+rem value with ScriptDir, if still not OK, with InitialDir:
+set ModuleDirOriginalForm=%ModuleDir%
+if not exist "%ModuleDir%" (
+  echo.
+  echo ModuleDir does not exist: 
+  echo   "%ModuleDir%"
+  echo Attempting to combine CallingScriptDir and ModuleDir ...
+  set ModuleDir=%CallingScriptDir%\%ModuleDirOriginalForm%
+)
+if not exist "%ModuleDir%" (
+  echo.
+  echo ModuleDir does not exist: 
+  echo   "%ModuleDir%"
+  echo Attempting to combine InitialDir and ModuleDir ...
+  set ModuleDir=%InitialDir%\%ModuleDirOriginalForm%
+)
+
+rem Do some additional verifications:
+if not exist "%ModuleDir%" (
+  echo.
+  echo Module direcory DOES NOT EXIST, exiting:
+  echo   "%ModuleDir%"
+  echo.
+  set StoredErrorLevel=1
+  set ErrorMessage=Module's directory does not exist.
+  goto finalize
+)
 set ModuleGitDir=%ModuleDir%\.git\
 if not exist "%ModuleGitDir%" (
-  echo Module direcory NOT PROPER Git DIRECTORY, exiting...
+  echo.
+  echo Module direcory NOT PROPER Git DIRECTORY, exiting:
+  echo   "%ModuleDir%"
+  echo.
   set StoredErrorLevel=1
   set ErrorMessage=Module's directory is not a Git directory.
   goto finalize
 )
 
-echo REMOVING Module directory:
+echo CLEANING Module directory (removing untracked files and dirs):
 echo   "%ModuleDir%"
 echo Executing:
-echo   git clean -fX
+echo   git clean -f -x -d
 
 cd  "%ModuleDir%"
-git clean -fX -d
+git clean -f -x -d
 cd "%InitialDir%"
-
-
-rem echo XXX 1  / test output
 
 
 :finalize
@@ -87,13 +110,8 @@ if defined PrintSettingsInScripts (
   )
 )
 
-
-rem echo XXX 3  / test output
-
 rem Error reporting:
 set IsDefinedStoredErrorLevel=0
-
-rem echo XXX 3 A  / test output
 
 if defined StoredErrorLevel (
   if "%StoredErrorLevel%" NEQ 0 (
@@ -104,8 +122,6 @@ if defined StoredErrorLevel (
     set StoredErrorLevel=
   )
 )
-
-rem echo XXX 4  / test output
 
 if %ERRORLEVEL% EQU 0 (
   echo Remove module completed successfully.
@@ -120,19 +136,19 @@ if %ERRORLEVEL% EQU 0 (
   if defined ErrorMessage (
     if "%ErrorMessage%" NEQ "" (
       echo   Error message: %ErrorMessage%
-	  rem echo XXX 9 A  / test output
 	)
   )
   echo.
   if %IsDefinedStoredErrorLevel% NEQ 0 (
     rem Also properly propagate error level to the calling environment:
 	endlocal 
-    rem echo XXX 9 B  / test output
     exit /b %StoredErrorLevel%
   )
 )
 
-rem echo XXX 10  / test output
+echo Finished module cleanup:
+echo   "%ModuleDir%"
+echo --------------------
 
 rem restore current directory and environment to state before the call:
 cd %InitialDir%
