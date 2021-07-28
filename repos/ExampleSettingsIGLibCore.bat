@@ -1,7 +1,7 @@
 
 @echo off
 
-rem Sets parameters for cloning or updating the IGLibScripts repository.
+rem Sets parameters for cloning or updating the IGLibCore repository.
 
 rem Parameters are set as environment variables with agreed names.
 rem These settings are used by scripts such as:
@@ -28,13 +28,13 @@ echo Defining env. variables: SETTINGS for updating repository: IGLibCore
 echo.
 
 rem Parameters for the update:
-set ModuleDirRelative=..\..\modules\IGLibScripts
+set ModuleDirRelative=modules\IGLibCore
 set CheckoutBranch=master
-set RepositoryAddress=https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git
-set RepositoryAddressSecondary=https://github.com/ajgorhoe/IGLib.workspace.scripts.git
-set RepositoryAddressLocal=d:/backup_sync/bk_code/git/ig/workspace/scripts.git/
+set RepositoryAddress=https://github.com/ajgorhoe/IGLib.modules.IGLibCore.git
+set RepositoryAddressSecondary=https://ajgorhoe@bitbucket.org/ajgorhoe/iglib.modules.iglibcore.git
+set RepositoryAddressLocal=d:/backup_sync/bk_code/git/ig/misc/iglib_modules/IGLibCore/
 set Remote=origin
-set RemoteSecondary=originSecondary
+set RemoteSecondary=originBitBucket
 set RemoteLocal=local
 
 set ModuleDir=%~dp0%ModuleDirRelative%
