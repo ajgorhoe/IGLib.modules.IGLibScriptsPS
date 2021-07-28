@@ -10,7 +10,7 @@ ver > nul
 
 set ScriptDir=%~dp0
 set InitialDir=%CD%
-set UpdateScript=%ScriptDir%UpdateRepo.bat
+set UpdateScript=%ScriptDir%\..\UpdateRepo.bat
 
 echo.
 echo Updating IGLib modules...
@@ -19,7 +19,7 @@ echo   UpdateScript: %UpdateScript%
 echo.
 
 call "%UpdateScript%" "%ScriptDir%ExampleSettingsIGLibScripts.bat"
-call "%UpdateScript%" "%ScriptDir%ExampleSettingsIGLibCore.bat"
+rem call "%UpdateScript%" "%ScriptDir%ExampleSettingsIGLibCore.bat"
 
 endlocal
 
