@@ -39,6 +39,13 @@ set RemoteLocal=local
 
 set ModuleDir=%~dp0%ModuleDirRelative%
 
+echo.
+echo CONTROL output:
+echo   ModuleDirRelative: %ModuleDirRelative%
+echo   ModuleDir:  %ModuleDir%
+echo   Script dir: %~dp0
+echo.
+
 
 
 rem If command-line arguments were specified then interpret them as another command and run the command:

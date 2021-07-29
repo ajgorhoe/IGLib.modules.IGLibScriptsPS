@@ -18,8 +18,8 @@ echo   ScriptDir: %ScriptDir%
 echo   UpdateScript: %UpdateScript%
 echo.
 
-call "%UpdateScript%" "%ScriptDir%ExampleSettingsIGLibScripts.bat"
-rem call "%UpdateScript%" "%ScriptDir%ExampleSettingsIGLibCore.bat"
+rem call "%UpdateScript%" "%ScriptDir%ExampleSettingsIGLibScripts.bat"
+call "%UpdateScript%" "%ScriptDir%ExampleSettingsIGLibCore.bat"
 
 endlocal
 

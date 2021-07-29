@@ -98,7 +98,7 @@ if "%~1" NEQ "" (
     echo.
 )
 
-call  %~dp0PrintRepoSettings.bat
+call  %~dp0\PrintRepoSettings.bat
 
 
 Rem Basic checks if something is forgotten
