@@ -30,7 +30,7 @@ call "%UpdateRepo%" "%ScriptContainingDir%\ExampleSettingsIGLibCore.bat"
 rem Update the repository according to settings in  
 rem ExampleSettingsIGLibScripts.bat , but with some modified parameters, 
 rem such as diectory where repository is cloned (See further explanation below):
-call "%UpdateRepo%" "%ScriptContainingDir%\ExampleSettingsIGLibScripts.bat" "%SetVar%" ModuleDir "%ScriptContainingDir%\scripts" "%SetVar%" RepositoryAddress https://ajgorhoe@bitbucket.org/ajgorhoe/iglib.modules.iglibscripts.git "%SetVar%" RepositoryAddressSecondary ""
+call "%UpdateRepo%" "%ScriptContainingDir%\ExampleSettingsIGLibScripts.bat" "%SetVar%" ModuleDir "%ScriptContainingDir%\scripts" "%SetVar%" RepositoryAddressSecondary https://ajgorhoe@bitbucket.org/ajgorhoe/iglib.modules.iglibscripts.git
 
 rem How the above command works:
 rem the UpdateRepo.bat script (whose path was stored in in variable 
@@ -57,10 +57,12 @@ rem recursively.
 rem In the above case, we override values for the followiing parameters
 rem from the ExampleSettingsIGLibScripts.bat script:
 rem   ModuleDir, which specifies where the repository is cloned
-rem   RepositoryAddress, which specifies address of the primary repository
-rem     (to which remote named origin is set)
-rem   RepositoryAddressSecondary is unset, which specifies address of the
-rem     secondary remote repository
+rem   RepositoryAddress, which specifies address of the secondary 
+rem     repository (to which remote named originSecondary is set via
+rem     settings already defined in the settings script); this
+rem     address was not specified in the original script. You can verify
+rem     the effect of this change by checking the remotes defined on the
+rem     cloned repository (without override there would be only one remote)
 
 
 endlocal
