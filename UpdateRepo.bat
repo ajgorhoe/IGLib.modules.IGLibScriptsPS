@@ -74,7 +74,8 @@ set ScriptDir=%~dp0
 set InitialDir=%CD%
 
 rem Skip the settings section:
-rem Uncomment goto later! Also when testing is completed, this whole block will be removed.
+rem Uncomment goto later! 
+rem When testing is completed, this whole block will be removed.
 goto afterSettings
 rem Parameters for the update:
 set ModuleDirRelative=..\..\modules\IGLibCore
@@ -110,8 +111,6 @@ if not defined RemoteLocal (set RemoteLocal=local)
 if "%RemoteLocal%" EQU "" (set RemoteLocal=local)
 
 rem Derived parameters:
-set ModuleContainingDir=%ScriptDir%
-set ModuleDir=%ModuleContainingDir%%ModuleDirRelative%
 set ModuleGitSubdir=%ModuleDir%\.git\refs
 echo Subdirectory identifying module correctness:
 echo   "%ModuleGitSubdir%"
