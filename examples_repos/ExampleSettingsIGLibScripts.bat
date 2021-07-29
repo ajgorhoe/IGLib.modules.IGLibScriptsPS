@@ -31,7 +31,7 @@ rem Parameters for the update:
 set ModuleDirRelative=modules\IGLibScripts
 set CheckoutBranch=master
 set RepositoryAddress=https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git
-set RepositoryAddressSecondary=https://github.com/ajgorhoe/IGLib.workspace.scripts.git
+set RepositoryAddressSecondary=https://ajgorhoe@bitbucket.org/ajgorhoe/iglib.modules.iglibscripts.git
 set RepositoryAddressLocal=d:/backup_sync/bk_code/git/ig/workspace/scripts.git/
 set Remote=origin
 set RemoteSecondary=originSecondary
@@ -45,8 +45,8 @@ rem If command-line arguments were specified then interpret them as another comm
 if "%~1" NEQ "" (
     echo.
     echo Settings script: Executing recursve commnd specified by arguments:
-    echo   cmd /c "%~1" "%~2" "%~3" "%~4" "%~5" "%~6" "%~7" "%~8" "%~9"
+    echo   call "%~1" "%~2" "%~3" "%~4" "%~5" "%~6" "%~7" "%~8" "%~9"
     echo.
-    cmd /c "%~1" "%~2" "%~3" "%~4" "%~5" "%~6" "%~7" "%~8" "%~9"
+    call "%~1" "%~2" "%~3" "%~4" "%~5" "%~6" "%~7" "%~8" "%~9"
 )
 

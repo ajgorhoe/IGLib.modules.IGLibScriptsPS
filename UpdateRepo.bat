@@ -295,7 +295,10 @@ git pull %Remote%
 :finalize
 
 echo.
-echo Update script completed for %ModuleDirRelative%/.
+echo Update/clone completed for repository:
+echo   %RepositoryAddress%
+echo in directory:
+echo   %ModuleDir%.
 echo.
 echo.
 echo.
