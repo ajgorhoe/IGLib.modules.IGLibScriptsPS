@@ -30,5 +30,15 @@
     <PackageLicenseExpression>IGLib Binary Redistributable Licence</PackageLicenseExpression>
     <PackageLicenseUrl>http://www2.arnes.si/%7Eljc3m2/igor/software/IGLibShellApp/License_IGShel.html</PackageLicenseUrl>
   </PropertyGroup>
+
+  <!--
+    <EmbeddedResource Include="..\**\*.bat*" LinkBase="Resources" />
+  -->
+
+  <ItemGroup>
+    <Content Include="..\**" />
+    <Content Remove="bin\**" />
+    <Content Remove="obj\**" />
+  </ItemGroup>
     
 </Project>
