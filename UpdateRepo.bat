@@ -1,83 +1,83 @@
 
 @echo off
 
-rem Checks out or updates a repository to/at the specified location.
-rem Usually used for reposiories that are embedded as full independent 
-rem repositories rather than via submodules or some other Git mechanism.
+:: Checks out or updates a repository to/at the specified location.
+:: Usually used for reposiories that are embedded as full independent 
+:: repositories rather than via submodules or some other Git mechanism.
 
-rem Callinng this script has NO SIDE EFFECTS (the body is enclosed in setlocal
-rem / endlocal block).
+:: Callinng this script has NO SIDE EFFECTS (the body is enclosed in setlocal
+:: / endlocal block).
 
-rem PARAMETERS of update are obtained via environment variables:
-rem   ModuleDir: root directory of cloned Repository
-rem   CheckoutBranch: branch that is checked out
-rem   RepositoryAddress: attress of the main remote repository
-rem   Remote: name of the remote that points to the above
-rem   RepositoryAddressSecondary: OPTIONAL, address of Secondary
-rem     remote Repository
-rem   RemoteSecondary: name of the remote that points to the above
-rem     (optional even if the above is defined)
-rem   RepositoryAddressLocal: OPTIONAL address of another alternative
-rem     remote repository, usually a local one
-rem   RemoteLocal: name of the remote that points to the above
-rem     (optional even if the above is defined)
+:: PARAMETERS of update are obtained via environment variables:
+::   ModuleDir: root directory of cloned Repository
+::   CheckoutBranch: branch that is checked out
+::   RepositoryAddress: attress of the main remote repository
+::   Remote: name of the remote that points to the above
+::   RepositoryAddressSecondary: OPTIONAL, address of Secondary
+::     remote Repository
+::   RemoteSecondary: name of the remote that points to the above
+::     (optional even if the above is defined)
+::   RepositoryAddressLocal: OPTIONAL address of another alternative
+::     remote repository, usually a local one
+::   RemoteLocal: name of the remote that points to the above
+::     (optional even if the above is defined)
 
-rem One way to call the script is to set all environment variables
-rem that define parameters of the update (see above), then call this
-rem script to perform the update. AA better wat is to create a settings
-rem script that sets all the required parameters, and call this script
-rem via embedded calll mechanism simply by stating script path as parameter
-rem when calling the script (the advantage is that scripts have no sde
-rem effects (variables set or changed) that would propagate to the calling
-rem environment). See below for explanation.
+:: One way to call the script is to set all environment variables
+:: that define parameters of the update (see above), then call this
+:: script to perform the update. AA better wat is to create a settings
+:: script that sets all the required parameters, and call this script
+:: via embedded calll mechanism simply by stating script path as parameter
+:: when calling the script (the advantage is that scripts have no sde
+:: effects (variables set or changed) that would propagate to the calling
+:: environment). See below for explanation.
 
-rem If any PARAMETERS are specified when calling the script, these are 
-rem interpreted as EMBEDDED COMMAND with parameters, which is CALLED
-rem BEFORE the body of the current script is executed, still WITHIN setlocal
-rem / endlocal block.
-rem This mechanism makes possible to define as parameter a script that sets
-rem all the parameters as environment variables (the settings script), which
-rem is called before the body of this script is executed. The advantage of
-rem this approach is that settings for different repositories are packed into
-rem the corresponding settings scripts and updating different repositories
-rem is performed by calling the current script wih the appropriate settings
-rem script as parameter. Annother advantage is that the calling environment
-rem is not polluted with environment variables defining the parameters,
-rem because this script takes care (by defining setlocal/endlocal block) that
-rem variables set in the embedded call do not propagate to the callerr's 
-rem environment.
+:: If any PARAMETERS are specified when calling the script, these are 
+:: interpreted as EMBEDDED COMMAND with parameters, which is CALLED
+:: BEFORE the body of the current script is executed, still WITHIN setlocal
+:: / endlocal block.
+:: This mechanism makes possible to define as parameter a script that sets
+:: all the parameters as environment variables (the settings script), which
+:: is called before the body of this script is executed. The advantage of
+:: this approach is that settings for different repositories are packed into
+:: the corresponding settings scripts and updating different repositories
+:: is performed by calling the current script wih the appropriate settings
+:: script as parameter. Annother advantage is that the calling environment
+:: is not polluted with environment variables defining the parameters,
+:: because this script takes care (by defining setlocal/endlocal block) that
+:: variables set in the embedded call do not propagate to the callerr's 
+:: environment.
 
-rem As EXAMPLE, suppose we define the scrippt SettingsRepoIGLibCore, which
-rem contains repository settings for the IGLibCore repository. Updating the
-rem corresponding repositort is done simply by calling:
+:: As EXAMPLE, suppose we define the scrippt SettingsRepoIGLibCore, which
+:: contains repository settings for the IGLibCore repository. Updating the
+:: corresponding repositort is done simply by calling:
 
-rem   UpdateRepo.bat SettingsRepoIGLibCore.bat
+::   UpdateRepo.bat SettingsRepoIGLibCore.bat
 
-rem It is advisable that the settings script is also created in such a way
-rem that it can take an embedded script as parameter, and this script is 
-rem run AFTER the environment variables (parameters for this script) are
-rem set. In this way, some parameters can be simply overriden by recursively
-rem nested commands, e.g.:
-rem   UpdateRepo.bat SettingsRepoIGLibCore.bat SetVar CheckoutBranch FeatureBranch1
-rem This would cause the same as command with a single parameter, except that
-rem the branch to be checked out would be different, i.e. FeatureBranch1
-rem instead of the branch specified in SettingsRepoIGLibCore.bat (e.g. the
-rem default master branch).
+:: It is advisable that the settings script is also created in such a way
+:: that it can take an embedded script as parameter, and this script is 
+:: run AFTER the environment variables (parameters for this script) are
+:: set. In this way, some parameters can be simply overriden by recursively
+:: nested commands, e.g.:
+::   UpdateRepo.bat SettingsRepoIGLibCore.bat SetVar CheckoutBranch FeatureBranch1
+:: This would cause the same as command with a single parameter, except that
+:: the branch to be checked out would be different, i.e. FeatureBranch1
+:: instead of the branch specified in SettingsRepoIGLibCore.bat (e.g. the
+:: default master branch).
 
 
 setlocal
 
-rem Reset the error level (by running an always successfull command):
+:: Reset the error level (by running an always successfull command):
 ver > nul
-rem Base directories:
+:: Base directories:
 set ScriptDir=%~dp0
 set InitialDir=%CD%
 
-rem Skip the settings section:
-rem Uncomment goto later! 
-rem When testing is completed, this whole block will be removed.
+:: Skip the settings section:
+:: Uncomment goto later! 
+:: When testing is completed, this whole block will be removed.
 goto afterSettings
-rem Parameters for the update:
+:: Parameters for the update:
 set ModuleDirRelative=..\..\modules\IGLibCore
 set CheckoutBranch=master
 set RepositoryAddress=https://github.com/ajgorhoe/IGLib.modules.IGLibCore.git
@@ -89,20 +89,39 @@ set RemoteLocal=local
 set ModuleDir=%~dp0%ModuleDirRelative%
 :afterSettings
 
-rem If command-line arguments were specified then take them as another command and run the command:
-if "%~1" NEQ "" (
-    rem See: https://stackoverflow.com/questions/14731877/to-call-or-not-to-call-a-batch-file
-    echo.
-    echo Executing:
-    echo   echo   call %~1 %~2 %~3 %~4 %~5 %~6 %~7 %~8 %~9
-    call  "%~1" "%~2" "%~3" "%~4" "%~5" "%~6" "%~7" "%~8" "%~9" "%~10"
-    echo.
-)
+REM :: If command-line arguments were specified then take them as another command and run the command:
+REM if "%~1" NEQ "" (
+    REM :: See: https://stackoverflow.com/questions/14731877/to-call-or-not-to-call-a-batch-file
+    REM echo.
+    REM echo Executing:
+    REM echo   echo   call %~1 %~2 %~3 %~4 %~5 %~6 %~7 %~8 %~9
+    REM call  "%~1" "%~2" "%~3" "%~4" "%~5" "%~6" "%~7" "%~8" "%~9" "%~10"
+    REM echo.
+REM )
 
+if "%~1" EQU "" goto AfterCommandCall
+	:: If any command-line arguments were specified then assemble a 
+	:: command-line from these arguments and execute it:
+
+	:: Assemble command-line from the remaining arguments....
+	set CommandLine6945="%~1"
+	:loop
+	shift
+	if [%1]==[] goto afterloop
+	set CommandLine6945=%CommandLine6945% "%~1"
+	goto loop
+	:afterloop
+
+	:: Call the assembled command-line:
+	call %CommandLine6945%
+:AfterCommandCall
+
+
+:: Print values of parameters relevant for repo updates/clone:
 call  %~dp0\PrintRepoSettings.bat
 
 
-Rem Basic checks if something is forgotten
+:: Basic checks if something is forgotten
 if not defined Remote (set Remote=origin)
 if "%Remote%" EQU "" (set Remote=origin)
 if not defined RemoteSecondary (set RemoteSecondary=originsecondary)
@@ -110,13 +129,13 @@ if "%RemoteSecondary%" EQU "" (set RemoteSecondary=originsecondary)
 if not defined RemoteLocal (set RemoteLocal=local)
 if "%RemoteLocal%" EQU "" (set RemoteLocal=local)
 
-rem Derived parameters:
+:: Derived parameters:
 set ModuleGitSubdir=%ModuleDir%\.git\refs
 echo Subdirectory identifying module correctness:
 echo   "%ModuleGitSubdir%"
 echo.
 
-rem Defaults for eventually missing information:
+:: Defaults for eventually missing information:
 set IsDefinedCheckoutBranch=0
 if defined CheckoutBranch (
   if "%CheckoutBranch%" NEQ "" (
@@ -199,10 +218,10 @@ echo   branch: %CheckoutBranch%
 echo   remote: %Remote%
 echo.
 
-rem Clone the repo if one does not exist (remove its directory before):
+:: Clone the repo if one does not exist (remove its directory before):
 if not exist "%ModuleGitSubdir%" (
   if exist "%ModuleDir%" (
-    rem Remove eventually existing directory beforehand:
+    :: Remove eventually existing directory beforehand:
     echo.
     echo Removing the current directory - invalid repo...
     echo Executing:
@@ -239,17 +258,17 @@ cd "%ModuleDir%"
 
 echo.
 if %IsClonedAlready% EQU 0 (
-    rem Set the first remote if named differently than origin:
+    :: Set the first remote if named differently than origin:
     if "%Remote%" EQU "origin" (
         echo Remote %Remote% not set, since remote "origin" is already set by default.
     ) else (
         echo setting remote %Remote% ...
-        rem git remote remove %Remote% 
-        rem ver > nul
+        :: git remote remove %Remote% 
+        :: ver > nul
         git remote add %Remote% "%RepositoryAddress%"
         ver > nul
     )
-    rem Set the two alternative remotes when specified:
+    :: Set the two alternative remotes when specified:
     if %IsDefinedRepositoryAddressSecondary% EQU 0 (
         echo Remote %RemoteSecondary% is not specified, not set.
     ) else (
@@ -271,19 +290,19 @@ if %IsClonedAlready% EQU 0 (
 )
 echo.
 
-REM echo.
-REM echo Fetching from %Remote%...
-REM git fetch %Remote%
+:: echo.
+:: echo Fetching from %Remote%...
+:: git fetch %Remote%
 
 echo.
 echo Try to check out remote branch...
-rem Checkout the remote branch (in case not yet checked out):
+:: Checkout the remote branch (in case not yet checked out):
 git checkout -b "%CheckoutBranch%" "remotes/%Remote%/%CheckoutBranch%" --
 ver > nul
 
 
 echo.
-rem Switch to checkout branch  (in case not yet checked out):
+:: Switch to checkout branch  (in case not yet checked out):
 echo Switching to branch "%CheckoutBranch%"...
 git switch "%CheckoutBranch%"
 
