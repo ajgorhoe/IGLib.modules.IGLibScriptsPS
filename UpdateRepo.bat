@@ -89,16 +89,6 @@ set RemoteLocal=local
 set ModuleDir=%~dp0%ModuleDirRelative%
 :afterSettings
 
-REM :: If command-line arguments were specified then take them as another command and run the command:
-REM if "%~1" NEQ "" (
-    REM :: See: https://stackoverflow.com/questions/14731877/to-call-or-not-to-call-a-batch-file
-    REM echo.
-    REM echo Executing:
-    REM echo   echo   call %~1 %~2 %~3 %~4 %~5 %~6 %~7 %~8 %~9
-    REM call  "%~1" "%~2" "%~3" "%~4" "%~5" "%~6" "%~7" "%~8" "%~9" "%~10"
-    REM echo.
-REM )
-
 if "%~1" EQU "" goto AfterCommandCall
 	:: If any command-line arguments were specified then assemble a 
 	:: command-line from these arguments and execute it:
