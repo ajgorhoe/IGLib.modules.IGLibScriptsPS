@@ -70,8 +70,8 @@ setlocal
 :: Reset the error level (by running an always successfull command):
 ver > nul
 :: Base directories:
-set ScriptDir=%~dp0
-set InitialDir=%CD%
+set ScriptDirUpdateRepo=%~dp0
+set InitialDirUpdateRepo=%CD%
 
 :: Skip the settings section:
 :: Uncomment goto later! 
@@ -202,7 +202,7 @@ echo.
 echo.
 echo Updating / cloning of (embedded) repository:
 echo   %RepositoryAddress%
-echo   to directory: %ModuleDirRelative%
+echo   to directory:
 echo   "%ModuleDir%"
 echo   branch: %CheckoutBranch%
 echo   remote: %Remote%
@@ -215,8 +215,8 @@ if not exist "%ModuleGitSubdir%" (
     echo.
     echo Removing the current directory - invalid repo...
     echo Executing:
-    echo   rd /s /q %"ModuleDir"%
-    rd /s /q %"ModuleDir"%
+    echo   rd /s /q "%ModuleDir%"
+    rd /s /q "%ModuleDir%"
     echo.
   )
   echo.
@@ -312,7 +312,7 @@ echo.
 echo.
 echo.
 
-cd %InitialDir%
+cd %InitialDirUpdateRepo%
 ver > nul
 
 endlocal
