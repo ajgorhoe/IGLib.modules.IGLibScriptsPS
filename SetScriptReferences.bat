@@ -12,5 +12,5 @@ set UpdateRepo=%~dp0UpdateRepo.bat
 set SetVar=%~dp0SetVar.bat
 set PrintRepoSettings=%~dp0PrintRepoSettings.bat
 
-set SetScriptReferences==%~dp0SetScriptReferences.bat
+set SetScriptReferences=%~dp0SetScriptReferences.bat
 set PrintScriptReferences=%~dp0PrintScriptReferences.bat
