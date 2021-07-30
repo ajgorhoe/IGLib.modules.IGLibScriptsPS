@@ -40,12 +40,20 @@ set RemoteLocal=local
 set ModuleDir=%~dp0%ModuleDirRelative%
 
 
-rem If command-line arguments were specified then interpret them as another command and run the command:
-if "%~1" NEQ "" (
-    echo.
-    echo Settings script: Executing recursve commnd specified by arguments:
-    echo   call "%~1" "%~2" "%~3" "%~4" "%~5" "%~6" "%~7" "%~8" "%~9"
-    echo.
-    call "%~1" "%~2" "%~3" "%~4" "%~5" "%~6" "%~7" "%~8" "%~9"
-)
+if "%~1" EQU "" goto AfterCommandCall
+	:: If any command-line arguments were specified then assemble a 
+	:: command-line from these arguments and execute it:
+
+	:: Assemble command-line from the remaining arguments....
+	set CommandLine6945="%~1"
+	:loop
+	shift
+	if [%1]==[] goto afterloop
+	set CommandLine6945=%CommandLine6945% "%~1"
+	goto loop
+	:afterloop
+
+	:: Call the assembled command-line:
+	call %CommandLine6945%
+:AfterCommandCall
 
