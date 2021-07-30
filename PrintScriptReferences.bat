@@ -2,11 +2,9 @@
 @echo off
 setlocal
 
-:: Prints values of environment variables that are used for updating 
-:: repositories, e.g. by the script UpdateREpo.bat .
-:: Execution of the script does not have any siide effect such as setting 
-:: on changing variables in the calling environment (executiion block is 
-:: enclosed in setloca / endlocal calls).
+:: Prints values of environment variables that contain locations of the
+:: IGLibScripts directory and some scripts that are used in cloning and
+:: updating repositories. 
 
 :: BEFORE printing the values, this script treats eventual parameters as 
 :: another command with parameters and executes that command. This adds 
@@ -36,18 +34,12 @@ if "%~1" EQU "" goto AfterCommandCall
 :AfterCommandCall
 
 echo.
-echo Parameters for repository update:
+echo Variavles containing locations of the IGLibScripts directory
+echo and some relevant scripts:
 echo.
-echo ModuleDirRelative: "%ModuleDirRelative%"
-echo ModuleDir:         "%ModuleDir%"
-echo CheckoutBranch:    "%CheckoutBranch%"
-echo Remote:            "%Remote%"
-echo RemoteSecondary:   "%RemoteSecondary%"
-echo RemoteLocal:       "%RemoteLocal%"
-echo.
-echo RepositoryAddress: "%RepositoryAddress%"
-echo RepositoryAddressSecondary: "%RepositoryAddressSecondary%"
-echo RepositoryAddressLocal: "%RepositoryAddressLocal%"
+echo   IGLibScripts: %IGLibScripts%
+echo   UpdateRepo: %UpdateRepo%
+echo   SetVar: %SetVar%
 echo.
 
 :finalize
