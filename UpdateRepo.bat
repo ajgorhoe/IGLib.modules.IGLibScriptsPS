@@ -114,8 +114,8 @@ call  %~dp0\PrintRepoSettings.bat
 :: Basic checks if something is forgotten
 if not defined Remote (set Remote=origin)
 if "%Remote%" EQU "" (set Remote=origin)
-if not defined RemoteSecondary (set RemoteSecondary=originsecondary)
-if "%RemoteSecondary%" EQU "" (set RemoteSecondary=originsecondary)
+if not defined RemoteSecondary (set RemoteSecondary=originSecondary)
+if "%RemoteSecondary%" EQU "" (set RemoteSecondary=originSecondary)
 if not defined RemoteLocal (set RemoteLocal=local)
 if "%RemoteLocal%" EQU "" (set RemoteLocal=local)
 
