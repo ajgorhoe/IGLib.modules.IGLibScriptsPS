@@ -1,8 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-
-    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <title>IGLibScripts module</title>
   </head>
   <body>
     <br>
@@ -80,7 +81,11 @@
         operation parameters for the script. This can be avoided by
         calling the script in the second way, with <i>settings script</i>
         and its eventual arguments <i>specified as argumens to the </i><i>UpdateRepo
+
+
           call</i> (see the description below). In this way, the <i>settings
+
+
         </i><i>script</i> will is called recursively within the body of
         <i>UpdateRepo.bat</i>, enclosed in <i>setlocal / endlocal</i>
         block, which prevents propagation of side effects the caller's
@@ -94,10 +99,14 @@
         etc.), and then perform the repository update in the same manner
         as <i>UpdateRepo</i> called without arguments.<br>
         The <i>EmbeddedCommand</i> will typically be another batch <i>script
+
+
           that sets all the relevant environment variables</i> that
         define parameters for repository updating or cloning (see
         description of parameters via environment variables above).<br>
         The body of the <i>UpdateRepo.bat</i>&nbsp; script is <b>embedded
+
+
           in setlocal / endlocal</b> block, therefore any <b>side
           effects will not propagate to the caller environment</b>. This
         applies for side effects of <i>UpdateRepo.bat</i> as well as <i>EmbeddedCommand</i>.<br>
@@ -115,6 +124,8 @@
         environment variables that are necessary to carry update
         parameters to scripts. A typical use of this is passing to the <i>UpdateRepo</i>
         script a settings script, e.g. <i>SettingsIGLibScripts.bat, </i>which
+
+
         defines the necessary environment variables containing updating
         parameters such as local directory and remote address (in this
         example, for cloning / updating the IGLibScripts repository to a
@@ -125,6 +136,8 @@
         script main body that sets the environment variables. These
         further commands can for example modify some values set by the
         script, which enables <b>reusing the settings script</b>, but <b>with
+
+
           some updating parameters modified</b> (for example <b><i>ModuleDir</i></b>
         or <b><i>RepositoryAddressSecondary</i></b>) to achieve a bit
         different behavior. This can be achieved e.g. by the <i><b>SetVar.bat</b></i>
@@ -139,6 +152,8 @@
         (defining the branch that is checked out by the <i>UpdateRepo</i>
         script):<br>
         <blockquote><i><u>UpdateRepo</u> "</i><i><i>D:\GitUser</i>\RepositorySettings\SettingsIGLibScripts.bat"&nbsp;
+
+
             <u>SetVar</u> ModuleDir "D:\GitUser\My Workspace" <u>SetVar</u>
             CheckoutBranch "release/1.9.1"<br>
           </i></blockquote>
@@ -146,6 +161,8 @@
         above command, and scripts available in the <i>IGLibScripts</i>
         repository are underlined. To check out how this actually works
         in practice, refer to examples contained in &lt;<i>IGLibScripts</i>&gt;\examples_repos
+
+
         .<br>
       </blockquote>
     </blockquote>
@@ -216,6 +233,8 @@
     calling environment.<br>
     Beside variable name and value, the script can <b>optionally</b>
     take <b>further arguments</b>, which in this case define an <b>embedded
+
+
       command with eventual arguments</b> executed recursively within
     the script. The embedded command (when defined) is <b>executed
       after the specified variable value is assigned</b>, and <b>any
@@ -239,6 +258,8 @@
         &lt;arg 1 arg 2 ....&gt;</i></blockquote>
     <blockquote>
       <blockquote>The same as above, but in addition the <i>EmbeddedCommand
+
+
         </i> is also executed recursively, receiving the eventual
         remaining arguments (the optional <i>arg1</i>, <i>arg2</i>,
         etc.)<br>
@@ -314,7 +335,7 @@
         ....&gt;<br>
       </i>
       <blockquote>Executes the command <i>EmbeddedCommand</i>, passing
-        it the optional command-line arguments when defines (the
+        it the optional command-line arguments when defined (the
         optional arguments <i>arg1</i>, <i>arg2</i>, etc.), within the
         <i><b>setlocal</b></i> / <i><b>endlocal</b></i> block, such
         that changes such as environment variables defined or changed by
@@ -368,15 +389,29 @@
     <br>
     <h3><a name="utilities_printscriptreferences"></a>PrintScriptReferences.bat<br>
     </h3>
-    Prints values of environment variables that are set by <i>SetScriptReferences.bat.&nbsp;</i>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
+    Prints values of environment variables that are set by <i>SetScriptReferences.bat</i>.<br>
+    <b>Usage</b>:<br>
+    <blockquote><i>PrintScriptReferences.bat<br>
+      </i>
+      <blockquote>Just prints the values of environment variables that
+        are set by the <i>SetScriptReferences</i> script.<br>
+      </blockquote>
+      <i><i>PrintScriptReferences</i>.bat </i><i>EmbeddedCommand
+        &lt;arg 1 arg 2 ....&gt;</i><i></i><br>
+      <blockquote>Beside printing the variables as described above, this
+        also executes the command <i>EmbeddedCommand</i>, passing it
+        the optional command-line arguments when defined (the optional
+        arguments <i>arg1</i>, <i>arg2</i>, etc.). The command is
+        executed before printing of variables is performed. This can be
+        used e.g. to run the <i>SetScriptReferences</i> script, which
+        sets the variables, before they are printed. Execution of the <i>EmbeddedCommand</i>
+        is performed within the <i><b>setlocal</b></i> / <i><b>endlocal</b></i>
+        block, such that changes such as environment variables defined
+        or changed by the command are not propagated to the calling
+        environment. This is particularly useful for testing.<br>
+      </blockquote>
+      <blockquote> </blockquote>
+    </blockquote>
     <br>
     <br>
   </body>
