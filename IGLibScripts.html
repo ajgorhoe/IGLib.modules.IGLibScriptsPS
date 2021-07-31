@@ -9,16 +9,17 @@
     <h1>IGLibScripts Module<br>
     </h1>
     <br>
-    <h2>Introduction</h2>
+    <h2><a name="introduction"></a>Introduction</h2>
     The IHLibScripts is an <i>IGLib</i> (<i>Investigation Generic
       Library</i>) module that contains some useful batch scripts and
     shell scripts used by the library (e.g. for managing repository
     cloning and updates). <br>
     Mainly these utilities are generally useful and their use is not
     limited to <i>IGLib</i>.<br>
-    <h2>Selected Utilities</h2>
     <br>
-    <h3>UpdateRepo.bat</h3>
+    <h2><a name="utilities"></a>Selected Utilities</h2>
+    <br>
+    <h3><a name="utilities_updaterepo"></a>UpdateRepo.bat</h3>
     Clones or updates a Git repository at particular location on the
     disk. Parameters of the operation are obtained from environment
     variables with a predefined meaning for this command. These
@@ -178,7 +179,7 @@
     Performing&nbsp; such a check would require execution of additional
     scripts (such scripts may be provided in the future).<br>
     <br>
-    <h3>PrintRepoSettings.bat</h3>
+    <h3><a name="utilities_printreposettings"></a>PrintRepoSettings.bat</h3>
     Prints out values of the environment variables that are relevant
     (contain parameter values) for scripts that update or clone
     repositories.<br>
@@ -248,6 +249,129 @@
         had been assigned by the script.<br>
       </blockquote>
     </blockquote>
+    <br>
+    <h3><a name="utilities_runlocal"></a>RunLocal.bat</h3>
+    Executes the specified command or script in a local context
+    (embedded in the setlocal / endlocal block), such that any changes
+    in definitions or values of environment variables that the command
+    may cause are not propagated to the calling environment.<br>
+    For exemple, if you run the following command in the console window:<br>
+    <blockquote><i>RunLocal SetVar xy NewValue</i><br>
+    </blockquote>
+    the <i>SetVar</i> script will set the value of the environment
+    variable named <i>xy</i> but the effect will only be local (limited
+    to the <i>RunLocal</i> script) and the assignment will not persist
+    in the calling environment after the call. This can be verified by
+    running<br>
+    <blockquote><i>set xy</i><i> </i><br>
+    </blockquote>
+    or <br>
+    <blockquote><i>echo %xy%</i><br>
+    </blockquote>
+    in the same console window after running the above command. On the
+    contrary, when running <i>SetVar</i> script directly, i.e.:<br>
+    <blockquote><i>SetVar xy NewValue</i></blockquote>
+    &nbsp;the variable <i>xy</i> will actually be defined in the
+    calling environment after the call and its value will be&nbsp;<i>NewValue</i>,
+    as expected.<br>
+    <br>
+    At first glance this does not seem like a very useful functionality,
+    however, it may be quite valuable when testing the scripts similar
+    to those contained&nbsp; in the IGLibScripts repository, or in case
+    of these scripts, also to contain side effects of scripts that do
+    something but also have unintentional side effects.<br>
+    <br>
+    For example, several scripts described in this document can
+    recursively run embedded commands that can be specified via
+    additional command-line arguments that follow those that are
+    requested (if any). Batch scripts of the Windows command shell are
+    rather limited in how command-line arguments can be processed within
+    scripts (e.g. in the number of arguments that can be referenced by
+    consecutive numbers, like %1, %2, etc., limited to 9; or the ways
+    how arbitrary groups of command-line arguments can be passed on to
+    commands run recursively). In order to evade some of these
+    limitations we needed to define auxiliary variables used to assemble
+    command-lines for recursive commands, and in some scripts this
+    cannot be done within <i>setlocal</i> / <i>endlocal</i> block
+    because some side effect need to propagate to the calling
+    environment. Therefore, when recursively chaining several commands,
+    it may sometimes make sens to break propagation of side effect at
+    some point in hierarchy, and this can be achieved by using the <i>RunLocal.bat</i>
+    script.<br>
+    <br>
+    The other usage is in testing. Some scripts have intended side
+    effects, such as <i>SetScriptReferences.bat</i> or <i>SetVar..bat</i>.
+    Sometimes when troubleshooting issues ans debugging or testing such
+    scripts in a console, we want to run them in sequences but want to
+    preserve intact environment between successive calls, such that each
+    group of tests would run under the same conditions (without having
+    specific variables set by these scripts before running the next
+    test). The <i>SetLocal</i> script may come handy in such
+    situations.<br>
+    <br>
+    <b>Usage</b>:<br>
+    <blockquote><i>SetLocal.bat </i><i>EmbeddedCommand &lt;arg 1 arg 2
+        ....&gt;<br>
+      </i>
+      <blockquote>Executes the command <i>EmbeddedCommand</i>, passing
+        it the optional command-line arguments when defines (the
+        optional arguments <i>arg1</i>, <i>arg2</i>, etc.), within the
+        <i><b>setlocal</b></i> / <i><b>endlocal</b></i> block, such
+        that changes such as environment variables defined or changed by
+        the script are not propagated to the calling environment.<br>
+      </blockquote>
+    </blockquote>
+    <br>
+    <h3><a name="utilities_setscriptreferences"></a>SetScriptReferences.bat</h3>
+    Sets a set of predetermined environment variables to the paths of
+    the current locally cloned <i>IGLibScripts</i> repository and some
+    commonly used scripts within that are included in the repository.
+    The assignment of environment variables defined by the script
+    propagate back to the caller's environment.<br>
+    <br>
+    This script is commonly used in bootstrapping scripts, which take
+    care that the <i>IGLibScripts</i> is cloned at known location such
+    that its scripts can be used. There are several advantages in
+    putting script paths into environment variables. The scripts can in
+    this way be run in shorter form, e.g.:<br>
+    &nbsp;&nbsp;&nbsp; <i><u>"%UpdateRepo%"</u> .\SettingsIGLibCore <u>"%SetVar%"</u>
+      ModuleDir ..\modules\IGLibCore</i><br>
+    <br>
+    The second advantage is that reasonable attempts will be made that
+    names of these meaningful variables will remain unchanged, while
+    relative locations of the corresponding scripts within the <i>IGLibScripts</i>
+    repository or script names may change often.<br>
+    If a location within the <i>IGLibScripts</i> repository or name of
+    a certain script would change, the <i>SetScriptReferences.bat</i>
+    would be updated accordingly to reflect the new path (if not, this
+    would be a bug). In case that some variable name is found strange
+    and would be changed, the previous name can still remain actively
+    used in the script.<br>
+    <br>
+    The following environment variables are defined by the script:<br>
+    <blockquote><i><b>IGLibScripts</b></i> is set to the absolute path
+      path of the cloned <i>IGLibScripts</i> repository from which the
+      batch script was called.<br>
+      <i><b>UpdateRepo</b></i> is set to the full absolute path of the
+      script <i>UpdateRepo.bat</i> contained in the locally cloned <i>IGLibScripts</i>
+      repository from which the <i>SetScriptReferences</i> script was
+      called.<br>
+      <i><b>SetVar</b></i> is set to the absolute path of the <i>SetVar.bat</i>
+      script.<br>
+      <i><b>PrintRepoSettings</b></i> is set to the absolute path of the
+      <i>PrintRepoSettings.bat</i> script. <br>
+      <i><b>SetScriptReferences</b></i> is set to the absolute path of
+      the <i>SetScriptReferences.bat</i> script.<br>
+      <i><b>PrintScriptReferences</b></i> is set to the absolute path of
+      the <i>PrintScriptReferences.bat</i> script.<br>
+    </blockquote>
+    <br>
+    <h3><a name="utilities_printscriptreferences"></a>PrintScriptReferences.bat<br>
+    </h3>
+    <br>
+    <br>
+    <br>
+    <br>
     <br>
     <br>
     <br>
