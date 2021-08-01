@@ -10,6 +10,22 @@
     <h1>IGLibScripts Module<br>
     </h1>
     <br>
+    <i><b>Contents</b>:<br>
+    </i>
+    <ul>
+      <li><a href="#introduction"><i>Introduction</i></a></li>
+      <li><a href="#utilities"><i>Selected Utilities</i></a></li>
+      <ul>
+        <li><a href="#utilities_updaterepo"><i>UpdateRepo.bat</i></a></li>
+        <li><a href="#utilities_printreposettings"><i>PrintRepoSettings.bat</i></a></li>
+        <li><a href="#utilities_setvar"><i>SetVar.bat</i></a></li>
+        <li><a href="#utilities_runlocal"><i>RunLocal.bat</i></a></li>
+        <li><a href="#utilities_setscriptreferences"><i>SetScriptReferences.bat</i></a></li>
+        <li><i><a href="#utilities_printscriptreferences">PrintScriptReferences.bat</a><br>
+          </i></li>
+      </ul>
+    </ul>
+    <br>
     <h2><a name="introduction"></a>Introduction</h2>
     The IHLibScripts is an <i>IGLib</i> (<i>Investigation Generic
       Library</i>) module that contains some useful batch scripts and
@@ -83,7 +99,9 @@
         and its eventual arguments <i>specified as argumens to the </i><i>UpdateRepo
 
 
+
           call</i> (see the description below). In this way, the <i>settings
+
 
 
         </i><i>script</i> will is called recursively within the body of
@@ -101,10 +119,12 @@
         The <i>EmbeddedCommand</i> will typically be another batch <i>script
 
 
+
           that sets all the relevant environment variables</i> that
         define parameters for repository updating or cloning (see
         description of parameters via environment variables above).<br>
         The body of the <i>UpdateRepo.bat</i>&nbsp; script is <b>embedded
+
 
 
           in setlocal / endlocal</b> block, therefore any <b>side
@@ -126,6 +146,7 @@
         script a settings script, e.g. <i>SettingsIGLibScripts.bat, </i>which
 
 
+
         defines the necessary environment variables containing updating
         parameters such as local directory and remote address (in this
         example, for cloning / updating the IGLibScripts repository to a
@@ -136,6 +157,7 @@
         script main body that sets the environment variables. These
         further commands can for example modify some values set by the
         script, which enables <b>reusing the settings script</b>, but <b>with
+
 
 
           some updating parameters modified</b> (for example <b><i>ModuleDir</i></b>
@@ -154,6 +176,7 @@
         <blockquote><i><u>UpdateRepo</u> "</i><i><i>D:\GitUser</i>\RepositorySettings\SettingsIGLibScripts.bat"&nbsp;
 
 
+
             <u>SetVar</u> ModuleDir "D:\GitUser\My Workspace" <u>SetVar</u>
             CheckoutBranch "release/1.9.1"<br>
           </i></blockquote>
@@ -161,6 +184,7 @@
         above command, and scripts available in the <i>IGLibScripts</i>
         repository are underlined. To check out how this actually works
         in practice, refer to examples contained in &lt;<i>IGLibScripts</i>&gt;\examples_repos
+
 
 
         .<br>
@@ -225,7 +249,7 @@
       </blockquote>
       <i></i></blockquote>
     <br>
-    <h3>SetVar.bat</h3>
+    <h3><a name="utilities_setvar"></a>SetVar.bat</h3>
     Sets the value of the specified environment variable. The script
     requires at least two arguments, of which the first one is the name
     of the environment variable and the second one is the value to be
@@ -233,6 +257,7 @@
     calling environment.<br>
     Beside variable name and value, the script can <b>optionally</b>
     take <b>further arguments</b>, which in this case define an <b>embedded
+
 
 
       command with eventual arguments</b> executed recursively within
@@ -258,6 +283,7 @@
         &lt;arg 1 arg 2 ....&gt;</i></blockquote>
     <blockquote>
       <blockquote>The same as above, but in addition the <i>EmbeddedCommand
+
 
 
         </i> is also executed recursively, receiving the eventual
