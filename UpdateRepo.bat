@@ -284,6 +284,11 @@ echo.
 echo Pulling changes from %Remote%...
 git pull %Remote%
 
+echo.
+:: Switch to checkout branch  (in case not yet checked out):
+echo Try to checkout "%CheckoutBranch%"...
+git checkout "%CheckoutBranch%"
+
 
 :finalize
 
