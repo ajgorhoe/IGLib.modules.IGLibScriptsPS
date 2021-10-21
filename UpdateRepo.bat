@@ -5,8 +5,8 @@
 :: Usually used for reposiories that are embedded as full independent 
 :: repositories rather than via submodules or some other Git mechanism.
 
-:: Callinng this script has NO SIDE EFFECTS (the body is enclosed in setlocal
-:: / endlocal block).
+:: Callinng this script has NO SIDE EFFECTS (the body is enclosed in
+:: setlocal / endlocal block).
 
 :: PARAMETERS of update are obtained via environment variables:
 ::   ModuleDir: root directory of cloned Repository
@@ -309,5 +309,10 @@ echo.
 cd %InitialDirUpdateRepo%
 ver > nul
 
+echo.
+echo Calling endlocal before completing the script...
+
 endlocal
+
+echo   ... done, script completed.
 
