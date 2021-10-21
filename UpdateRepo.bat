@@ -24,7 +24,7 @@
 
 :: One way to call the script is to set all environment variables
 :: that define parameters of the update (see above), then call this
-:: script to perform the update. AA better wat is to create a settings
+:: script to perform the update. A better way is to create a settings
 :: script that sets all the required parameters, and call this script
 :: via embedded calll mechanism simply by stating script path as parameter
 :: when calling the script (the advantage is that scripts have no sde
