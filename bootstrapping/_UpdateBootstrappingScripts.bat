@@ -22,9 +22,12 @@ echo ======================================== %~n0%~x0:
 echo.
 echo IGLibScripts repo locaition:
 echo   "%ScriptDir%\..\"
-echo   copying to containing directory...
 echo Copying files from this repository to the containing bootstrapping 
 echo directory ...
+
+rem Currently we don't copy .gitignore; this can be changed by uncommenting
+rem the line below: 
+rem copy "%ScriptDir%\.gitignore" "%ScriptDir%\..\.." 
 
 copy "%ScriptDir%\BootStrapScripting.bat" "%ScriptDir%\..\.." 
 copy "%ScriptDir%\BootStrapUpdate.bat" "%ScriptDir%\..\.." 
