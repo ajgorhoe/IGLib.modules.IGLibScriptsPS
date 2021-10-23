@@ -12,7 +12,32 @@ rem bootstrapping directory.
 
 setlocal
 
-set ScriptDir=
+set ScriptDir=%~dp0
+
+rem Reset the error level:
+ver > nul
+echo.
+echo ======================================== %~n0%~x0:
+
+echo.
+echo IGLibScripts repo locaition:
+echo   "%ScriptDir%\..\"
+echo   copying to containing directory...
+echo Copying files from this repository to the containing bootstrapping 
+echo directory ...
+
+copy "%ScriptDir%\BootStrapScripting.bat" "%ScriptDir%\..\.." 
+copy "%ScriptDir%\BootStrapUpdate.bat" "%ScriptDir%\..\.." 
+copy "%ScriptDir%\SettingsIGLibScriptsBootstrap.bat" "%ScriptDir%\..\.." 
+
+copy "%ScriptDir%\..\PrintRepoSettings.bat" "%ScriptDir%\..\.." 
+copy "%ScriptDir%\..\SetVar.bat" "%ScriptDir%\..\.." 
+copy "%ScriptDir%\..\UpdateRepo.bat" "%ScriptDir%\..\.." 
+
+echo   ... copying done.
+echo.
+echo ======== End: %~n0%~x0
+echo.
 
 endlocal
 
