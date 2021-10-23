@@ -20,12 +20,12 @@ UPDATING the BOOTSTRAPPING SCRIPTS:
 1. Make sure that working copy of this repository is cloned inside the 
     bootstrapping directory. If not then execute the following command in the
 	bootstrapping directory:
-	  git clone 
+	  git clone https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git IGLibScripts
 2. Make sure that the appropriate branch / tag of this repository is checked
    out (normally, this should be the master branch).
-2. Perform git pull within this repository, to update to the latest version.
-3. Run the UpdateBootstrappingScripts.bat contained in the current directory.
-4. Commit and push changes in the bootstrapping directory. It is always
-   recommended that the 
+3. Perform git pull within this repository, to update to the latest version.
+4. Run the UpdateBootstrappingScripts.bat contained in the current directory.
+5. Commit and push changes in the bootstrapping directory. It is always
+   recommended to review the changes before doing that.
 
 
