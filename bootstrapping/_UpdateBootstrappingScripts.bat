@@ -28,6 +28,7 @@ echo directory ...
 rem Currently we don't copy .gitignore; this can be changed by uncommenting
 rem the line below: 
 rem copy "%ScriptDir%\.gitignore" "%ScriptDir%\..\.." 
+copy "%ScriptDir%\0readme_bootstrappingscripts.txt" "%ScriptDir%\..\.." 
 
 copy "%ScriptDir%\BootStrapScripting.bat" "%ScriptDir%\..\.." 
 copy "%ScriptDir%\BootStrapUpdate.bat" "%ScriptDir%\..\.." 
