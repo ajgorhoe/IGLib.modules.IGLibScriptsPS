@@ -17,7 +17,7 @@ ver > nul
 
 echo.
 echo ======================================== %~n0%~x0:
-
+echo.
 
 if "%~1" EQU "" goto AfterCommandCall
 	:: If any command-line arguments were specified then assemble a 
