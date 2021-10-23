@@ -28,4 +28,11 @@ UPDATING the BOOTSTRAPPING SCRIPTS:
 5. Commit and push changes in the bootstrapping directory. It is always
    recommended to review the changes before doing that.
 
+When updating scripts from this directory, one may want to actually update 
+the sccripts and test them in the bootstrapping directory and then copying
+them into this repository. If this is ths choice, one should perform an update
+before starting to work on the scripts, to make sure that the updated versions
+(i.e., the latest versions contained in this repository) are used as starting
+point.
+
 
