@@ -14,7 +14,10 @@ setlocal
 
 :: Reset the error level (by running an always successfull command):
 ver > nul
-:: Base directories:
+
+echo.
+echo ======================================== %~n0%~x0:
+echo.
 
 if "%~1" EQU "" goto AfterCommandCall
 	:: If any command-line arguments were specified then assemble a 
@@ -48,6 +51,10 @@ echo.
 
 :finalize
 ver > nul
+
+echo.
+echo ======== End: %~n0%~x0
+echo.
 
 endlocal
 
