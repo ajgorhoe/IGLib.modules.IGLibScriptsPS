@@ -43,18 +43,27 @@ if exist "%ModuleGitSubdir%" goto :SkipUpdate
 :SkipUpdate
 
 
-if not exist "%ModuleGitSubdir%" goto ErrorScriptRepo
+if not exist "%ModuleGitSubdir%" goto Fallback
   rem Update script locations to point intto IGLibScripts
   rem by calling SetScriptReferences.bat in IGLibScripts:
   call "%ModuleDir%\SetScriptReferences.bat"
   rem call "%PrintScriptReferences%"
   goto AfterScriptReferencesUpdate
+
+:Fallback
+if not exist "%~dp0\fallback\FallbackBootStrapScripting.bat" goto ErrorScriptRepo
+
+rem Call the falback bootstrapping script:
+call "%~dp0\fallback\FallbackBootStrapScripting.bat"
+goto AfterScriptReferencesUpdate
+
 :ErrorScriptRepo
   echo.
   echo ERROR in BOOTSTRAPPING scripts:
   echo   IGLibScripts module could not be cloned.
   echo   Fallback to bootstrapping scripts; may not work properly.
   echo.
+
 :AfterScriptReferencesUpdate
 
 
