@@ -35,4 +35,11 @@ before starting to work on the scripts, to make sure that the updated versions
 (i.e., the latest versions contained in this repository) are used as starting
 point.
 
-
+When a repository includes a bootstrapping/fallback/ directory that contains
+a copy of the IGLibScripts repository, files from fallback_optional can 
+be copied to that directory, to provide a standard fallback script. When a 
+fallback copy of the IGLibScrips directory is located somewhere else, 
+files from fallback_optional/ cannot be just automatically copied and the
+fallback script (fallback/FallbackBootStrapScripting.bat) must be customized
+in order to point to the correct location of the fallback copy of the 
+IGLibScripts repository.
