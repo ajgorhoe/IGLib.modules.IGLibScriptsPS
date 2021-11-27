@@ -9,6 +9,19 @@ echo   bootstrapping essential scripts...
 echo.
 echo Obtaining bootstrapping script repository settins...
 
+rem Check conditions for needing to bootstrap / skip bootstrapping
+if not defined IGLibScripts goto ContinueBootStrapScripting
+if not exist "%IGLibScripts%" goto ContinueBootStrapScripting
+if not defined SetScriptReferences goto ContinueBootStrapScripting
+if not exist "%SetScriptReferences%" goto ContinueBootStrapScripting
+rem no need to continue:
+echo.
+echo Scripting is already bootsttrapped, skipping the remainder 
+echo   off BootStrapScripting.
+echo.
+goto AfterScriptReferencesUpdate
+:ContinueBootStrapScripting
+
 :: Define initially script locations for bootstrapping:
 set BootstrapSettings=%~dp0\SettingsIGLibScriptsBootstrap.bat
 set UpdateRepo=%~dp0\UpdateRepo.bat
