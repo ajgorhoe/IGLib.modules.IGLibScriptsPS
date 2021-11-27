@@ -9,7 +9,14 @@ echo   bootstrapping essential scripts...
 echo.
 echo Obtaining bootstrapping script repository settins...
 
-rem Check conditions for needing to bootstrap / skip bootstrapping
+rem Check conditions for needing to bootstrap / skip bootstrapping...
+rem Bootstrapping is performed conservatively: if bootstrappng script
+rem locations are already defined (via environment pre-agreed variables) 
+rem and scripts actually exist at these locations then bootstrapping
+rem is skipped. This saves time when bootstrappiing is called in a script 
+rem that was called by another script that already performed bootstrapping.
+rem Call BootstrapUpdate to override this and clone/update the IGLibScripts
+rem repository unconditionally.
 if not defined IGLibScripts goto ContinueBootStrapScripting
 if not exist "%IGLibScripts%" goto ContinueBootStrapScripting
 if not defined SetScriptReferences goto ContinueBootStrapScripting
