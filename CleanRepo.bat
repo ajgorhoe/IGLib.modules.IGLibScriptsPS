@@ -1,7 +1,7 @@
 
 @echo off
 
-:: Removes the repository at the specified location.
+:: Cleans the repository at the specified location.
 :: Usually used for reposiories that are embedded as full independent 
 :: repositories rather than via submodules or some other Git mechanism.
 
@@ -40,14 +40,14 @@
 :: contains repository settings for the IGLibCore repository. Removing the
 :: corresponding repository is done simply by calling:
 
-::   RemoveRepo.bat SettingsRepoIGLibCore.bat
+::   CleanRepo.bat SettingsRepoIGLibCore.bat
 
 :: It is advisable that the settings script is also created in such a way
 :: that it can take an embedded script as parameter, and this script is 
 :: run AFTER the environment variables (parameters for this script) are
 :: set. In this way, some parameters can be simply overriden by recursively
 :: nested commands, e.g.:
-::   RemoveRepo.bat SettingsRepoIGLibCore.bat SetVar ModuleDir .\MyDir
+::   CleanRepo.bat SettingsRepoIGLibCore.bat SetVar ModuleDir .\MyDir
 :: This would cause the same as command with a single parameter, except that
 :: the module's cloned directory would be different, i.e. instead of the 
 :: branch specified in SettingsRepoIGLibCore.bat.
@@ -58,8 +58,8 @@ setlocal
 :: Reset the error level (by running an always successfull command):
 ver > nul
 :: Base directories:
-set ScriptDirUpdateRepo=%~dp0
-set InitialDirUpdateRepo=%CD%
+set ScriptDirCleanRepo=%~dp0
+set InitialDirCleanRepo=%CD%
 
 rem Before execution, execute command composed of script parameters, when
 rem any:
@@ -68,26 +68,26 @@ if "%~1" EQU "" goto AfterCommandCall
 	:: command-line from these arguments and execute it:
 
 	:: Assemble command-line from the remaining arguments....
-	set CommandLine809476="%~1"
+	set CommandLine90674="%~1"
 	:loop
 	shift
 	if [%1]==[] goto afterloop
-	set CommandLine809476=%CommandLine809476% "%~1"
+	set CommandLine90674=%CommandLine90674% "%~1"
 	goto loop
 	:afterloop
 
 	:: Call the assembled command-line:
 	echo.
 	echo Calling command composed of arguments:
-	echo   "%CommandLine809476%"
+	echo   "%CommandLine90674%"
 	echo.
-	call %CommandLine809476%
+	call %CommandLine90674%
 :AfterCommandCall
 
 
 echo.
 echo ========
-echo Removing (embedded) module repository located at:
+echo Cleaning (embedded) module repository located at:
 echo   "%ModuleDir%"
 echo.
 
@@ -99,15 +99,8 @@ if not exist "%ModuleGitSubdir%" (
   echo ====
   echo Module's Git subdirectory does NOT exist:
   echo   "%ModuleGitSubdir%"
-  echo Removing of module directory will NOT be performed - not a Git repo.
+  echo Cleaning of module directory will NOT be performed - not a Git repo.
   echo. 
-  if exist "%ModuleDir%" (
-    :: Warn about existing module directory:
-    echo WARNING: Module directory exists however:
-	echo   "%ModuleDir%"
-	echo If the above directory should be removed, please REMOVE it MANUALLY!
-    echo.
-  )
   goto finalize
 ) else (
     rem 
@@ -115,21 +108,22 @@ if not exist "%ModuleGitSubdir%" (
 
 echo.
 echo ========
-echo REMOVING Module directory:
+echo CLEANING Module directory (removing untracked files and dirs):
 echo   "%ModuleDir%"
 echo Executing:
-echo   rd /s /q "%ModuleDir%"
-call rd /s /q "%ModuleDir%"
-echo.
+echo   git clean -f -x -d
+
+cd  "%ModuleDir%"
+git clean -f -x -d
 
 
 
 :finalize
 
-cd %InitialDirUpdateRepo%
+cd %InitialDirCleanRepo%
 ver > nul
 
 endlocal
 
-echo   ... done, "RemoveRepo" script completed.
+echo   ... done, "CleanRepo" script completed.
 
