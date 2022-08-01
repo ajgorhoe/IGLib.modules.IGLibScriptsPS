@@ -74,12 +74,15 @@ setlocal
 	rem If specified, we update the repo according to parameters:
     if "%ForceUpdate%" NEQ "0" (
 	  
-	  echo #### Beginning of ForceUpdste 
+	  echo #### ForceUpdate: beginning
 	  
 	  call "%ModuleDir%\SetScriptReferences.bat"
+	  
+	  echo #### ForceUpdate, between SetScriptReferences and UpdateRepo
+	  
 	  call "%UpdateRepo%"
 	  
-	  echo #### End of ForceUpdste 
+	  echo #### ForceUpdate: end
 	  
 	)
   )
