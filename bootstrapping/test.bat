@@ -13,10 +13,14 @@
 :: printed out for easier debugging abd troubleshooting.
 
 setlocal
+
+set PrintDebugInfo=1
+
 call "%~dp0\BootStrapScripting.bat" %*
 
-call %PrintRepoSettings%
-call %PrintScriptReferences%
+rem call %PrintRepoSettings%
+rem call %PrintScriptReferences%
+
 endlocal
 
 :finalize

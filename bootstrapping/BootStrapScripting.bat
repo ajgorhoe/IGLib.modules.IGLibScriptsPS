@@ -36,6 +36,9 @@ setlocal
   set ModuleDir=%~dp0\%ModuleDirRelative%
   set ModuleGitSubdir=%ModuleDir%\.git\refs
   
+  echo #### After IGLib settings under setlocal 
+  
+  
   set ForceUpdate=0
   if "%1" NEQ "" (
     if "%1" NEQ "0" (
@@ -46,10 +49,16 @@ setlocal
     rem There is no IGLibScripts module repo at expected location, 
 	rem try to clone the repo:
     git clone "%RepositoryAddress%" "%ModuleDir%"
+	
+	echo #### After FIRST direct clone
+	
 	if not exist "%ModuleGitSubdir%" (
 	  rem We still don't have the proper IGLibScript repo, try alternative
 	  rem location:
 	  git clone "%RepositoryAddressSecondary%" "%ModuleDir%"
+	  
+	  echo #### After SECOND direct clone
+	  
 	)
 	if exist "%ModuleDir%" (
 	  call "%ModuleDir%\SetScriptReferences.bat"
@@ -57,26 +66,45 @@ setlocal
 	rem After pure clone, try to call the update script (which will now
 	rem skip cloning) - to switch to the right branch.
 	call "%UpdateRepo%"
+	
+	echo #### After UpdateRepo - end of Repo not exists
+	
   ) else (
     rem We already have IGLibScripts module's repo at expected location.
 	rem If specified, we update the repo according to parameters:
     if "%ForceUpdate%" NEQ "0" (
+	  
+	  echo #### Beginning of ForceUpdste 
+	  
 	  call "%ModuleDir%\SetScriptReferences.bat"
 	  call "%UpdateRepo%"
+	  
+	  echo #### End of ForceUpdste 
+	  
 	)
   )
-
-  call %PrintRepoSettings%
+  
+  if "%PrintDebugInfo%" EQU "1" (
+    call %PrintRepoSettings%
+  )
 
 endlocal
+
+echo #### After endlocal
+
 
 rem If IGLibScripts directory exists, make sure that script paths are 
 rem updated to point to that directory: 
 if exist "%~dp0\IGLibScripts" (
-  call "%~dp0\IGLibScripts\UpdateRepo.bat"
+  call "%~dp0\IGLibScripts\SetScriptReferences.bat"
+  
+  echo #### After final SetScriptReferences
+  
 )
 
-call %PrintScriptReferences%
+if "%PrintDebugInfo%" EQU "1" (
+  call %PrintScriptReferences%
+)
 
 
 :finalize
