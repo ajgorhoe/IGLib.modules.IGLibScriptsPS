@@ -61,6 +61,8 @@ ver > nul
 set ScriptDirUpdateRepo=%~dp0
 set InitialDirUpdateRepo=%CD%
 
+rem Before execution, execute command composed of script parameters, when
+rem any:
 if "%~1" EQU "" goto AfterCommandCall
 	:: If any command-line arguments were specified then assemble a 
 	:: command-line from these arguments and execute it:
@@ -75,131 +77,44 @@ if "%~1" EQU "" goto AfterCommandCall
 	:afterloop
 
 	:: Call the assembled command-line:
+	echo.
+	echo Calling command composed of arguments:
+	echo   "%CommandLine6945%"
+	echo.
 	call %CommandLine6945%
 :AfterCommandCall
 
 
-:: Print values of parameters relevant for repo updates/clone:
-call  %~dp0\PrintRepoSettings.bat
-
-
-:: Basic checks if something is forgotten
-rem if not defined Remote (set Remote=origin)
-rem if "%Remote%" EQU "" (set Remote=origin)
-rem if not defined RemoteSecondary (set RemoteSecondary=originSecondary)
-rem if "%RemoteSecondary%" EQU "" (set RemoteSecondary=originSecondary)
-rem if not defined RemoteLocal (set RemoteLocal=local)
-rem if "%RemoteLocal%" EQU "" (set RemoteLocal=local)
-
-:: Derived parameters:
-set ModuleGitSubdir=%ModuleDir%\.git\refs
-echo Subdirectory identifying module correctness:
-echo   "%ModuleGitSubdir%"
 echo.
-
-:: Defaults for eventually missing information:
-set IsDefinedCheckoutBranch=0
-if defined CheckoutBranch (
-  if "%CheckoutBranch%" NEQ "" (
-    set IsDefinedCheckoutBranch=1
-  )
-)
-if %IsDefinedCheckoutBranch% EQU 0 (
-  echo.
-  echo CheckoutBranch set to default - master
-  set CheckoutBranch=master
-)
-set IsDefinedRemote=0
-if defined Remote (
-  if "%Remote%" NEQ "" (
-    set IsDefinedRemote=1
-  )
-)
-if %IsDefinedRemote% EQU 0 (
-  echo.
-  echo Remote set to default - origin
-  set Remote=origin
-)
-
-set IsDefinedRepositoryAddressSecondary=0
-if defined RepositoryAddressSecondary (
-  if "%RepositoryAddressSecondary%" NEQ "" (
-    set IsDefinedRepositoryAddressSecondary=1
-  )
-)
-if %IsDefinedRepositoryAddressSecondary% NEQ 0 (
-    echo.
-    echo Secondary repository address: %RepositoryAddressSecondary%
-    echo.
-) else (
-    echo.
-    echo Secondary repository address is not defined.
-)
-set IsDefinedRepositoryAddressLocal=0
-if defined RepositoryAddressLocal (
-  if "%RepositoryAddressLocal%" NEQ "" (
-    set IsDefinedRepositoryAddressLocal=1
-  )
-)
-if %IsDefinedRepositoryAddressLocal% NEQ 0 (
-    echo.
-    echo Local repository address: %RepositoryAddressLocal%
-    echo.
-) else (
-    echo.
-    echo Local repository address is not defined.
-)
-
-set IsDefinedRepositoryAddressSecondary=0
-if defined RepositoryAddressSecondary (
-  if "%RepositoryAddressSecondary%" NEQ "" (
-    set IsDefinedRepositoryAddressSecondary=1
-  )
-)
-if %IsDefinedRepositoryAddressSecondary% NEQ 0 (
-    echo.
-    echo Secondary repository address: %RepositoryAddressSecondary%
-    echo.
-) else (
-    echo.
-    echo Secondary repository address is not defined.
-)
-
-set IsClonedAlready=0
-if exist "%ModuleGitSubdir%" (
-    set IsClonedAlready=1
-)
-
-echo.
-echo.
-echo Removing (embedded) repository located at:
+echo ========
+echo Removing (embedded) module repository located at:
 echo   "%ModuleDir%"
 echo.
 
-:: Clone the repo if one does not exist (remove its directory before):
+:: Check that directory exists and it is a true Git repository:
+:: Derived parameters:
+set ModuleGitSubdir=%ModuleDir%\.git\refs
 if not exist "%ModuleGitSubdir%" (
   echo.
-  echo Module Git subdirectory does not exist:
+  echo ====
+  echo Module's Git subdirectory does NOT exist:
   echo   "%ModuleGitSubdir%"
-  echo Removing of module directory will not be performed.
-  echo.  
+  echo Removing of module directory will NOT be performed - not a Git repo.
+  echo. 
   if exist "%ModuleDir%" (
     :: Warn about existing module directory:
-    echo.
-    echo Module directory exists however:
+    echo WARNING: Module directory exists however:
 	echo   "%ModuleDir%"
-	echo If the above directory was intended to be remove, please REMOVE it
-	echo   MANUALLY!
-    echo Executing:
-    echo   rd /s /q "%ModuleDir%"
-    rd /s /q "%ModuleDir%"
+	echo If the above directory should be removed, please REMOVE it MANUALLY!
     echo.
   )
+  goto finalize
 ) else (
     rem 
 )
 
 echo.
+echo ========
 echo REMOVING Module directory:
 echo   "%ModuleDir%"
 echo Executing:
@@ -214,10 +129,7 @@ echo.
 cd %InitialDirUpdateRepo%
 ver > nul
 
-echo.
-echo Calling endlocal before completing the script...
-
 endlocal
 
-echo   ... done, script completed.
+echo   ... done, "RemoveRepo" script completed.
 
