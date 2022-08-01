@@ -42,6 +42,7 @@ echo and some relevant scripts:
 echo.
 echo   IGLibScripts: %IGLibScripts%
 echo   UpdateRepo: %UpdateRepo%
+echo   RemoveRepo: %RemoveRepo%
 echo   SetVar: %SetVar%
 echo   PrintRepoSettings: %PrintRepoSettings%
 echo.
