@@ -32,6 +32,9 @@ rem Make sure that IGLibScripts is cloned here and updated (argument 1
 rem forces updating, even if IGLibScripts has already been cloned):
 call "%ScriptDir%\BootstrapScripting.bat" 1
 
+rem If the fallback/ subdirectory does not exist, create it:
+mkdir "%ScriptDir%\fallback" 
+
 rem Copy scripts from updated IGLibScripts to fallback/ directory:
 copy "%IGlibScripts%\*.bat" "%ScriptDir%\fallback" /y
 
