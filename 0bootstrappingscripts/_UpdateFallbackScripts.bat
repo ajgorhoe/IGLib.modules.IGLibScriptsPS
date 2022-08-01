@@ -1,12 +1,21 @@
 
-rem This scripts updates the bootstrapping scripts in the bootstrapping 
-rem directory by copying the most recent versions of the scripts from the 
-rem current repository. 
-rem The working copy of the current repository must be directly contained
-rem in the bootstrapping directory and the appropriate branch or commit
-rem (normally, the master branch) must be checked out.
-rem After running this script, do not forget to commit changes in the 
-rem bootstrapping directory.
+:: This scripts updates the bootstrapping scripts in the current 
+:: directory by copying the most recent versions of the scripts from the 
+:: IGLibScripts repository. 
+::
+:: The IGLibScripts repository is first cloned and updated by calling
+:: BootstrapScripting.bat. Then, the files to be updated are copied from
+:: the repository clone.
+::
+:: WARNING: Do not forget to commit changes after running this script.
+:: 
+:: Remark: You can perform this operation MANUALLY. Just clone the 
+:: IGLibScripts repository to any suitable location (or update an existing
+:: clone), then copy contents of directory to fallback/ subdirectory, and
+:: direct content of the 0bootstrappingscripts/ subdirectory to the current
+:: directory. If there are any issues with the current script, use this
+:: approach as workaround.
+
 
 @echo off
 
@@ -14,29 +23,22 @@ setlocal
 
 set ScriptDir=%~dp0
 
-rem Reset the error level:
-ver > nul
 echo.
-echo ======================================== %~n0%~x0:
-
+echo Updating the current bootstrapping directory with the updated scripts 
+echo and other files from the IGLibScripts repository...
 echo.
-echo IGLibScripts repo locaition:
-echo   "%ScriptDir%\..\"
-echo Copying files from this repository to the containing bootstrapping 
-echo directory ...
 
-rem Currently we don't copy .gitignore; this can be changed by uncommenting
-rem the line below: 
-rem copy "%ScriptDir%\.gitignore" "%ScriptDir%\..\.." 
-copy "%ScriptDir%\0readme_bootstrappingscripts.txt" "%ScriptDir%\..\.." 
+rem Make sure that IGLibScripts is cloned here and updated (argument 1
+rem forces updating, even if IGLibScripts has already been cloned):
+call "%ScriptDir%\BootstrapScripting.bat" 1
 
-copy "%ScriptDir%\BootStrapScripting.bat" "%ScriptDir%\..\.." 
-copy "%ScriptDir%\BootStrapUpdate.bat" "%ScriptDir%\..\.." 
-copy "%ScriptDir%\SettingsIGLibScriptsBootstrap.bat" "%ScriptDir%\..\.." 
+rem Copy scripts from updated IGLibScripts to fallback/ directory:
+copy "%IGlibScripts%\*.bat" "%ScriptDir%\fallback" /y
 
-copy "%ScriptDir%\..\PrintRepoSettings.bat" "%ScriptDir%\..\.." 
-copy "%ScriptDir%\..\SetVar.bat" "%ScriptDir%\..\.." 
-copy "%ScriptDir%\..\UpdateRepo.bat" "%ScriptDir%\..\.." 
+rem Copy scripts, text files, and .gitignore
+copy "%IGlibScripts%\0bootstrappingscripts\*.bat" "%ScriptDir%" /y
+copy "%IGlibScripts%\0bootstrappingscripts\*.txt" "%ScriptDir%" /y
+copy "%IGlibScripts%\0bootstrappingscripts\.gitignore" "%ScriptDir%" /y
 
 echo   ... copying done.
 echo.
