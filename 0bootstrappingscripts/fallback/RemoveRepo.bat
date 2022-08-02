@@ -114,7 +114,7 @@ if not exist "%ModuleGitSubdir%" (
 )
 
 echo.
-echo ========
+echo ====
 echo REMOVING Module directory:
 echo   "%ModuleDir%"
 echo Executing:
