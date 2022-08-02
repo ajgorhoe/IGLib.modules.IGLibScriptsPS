@@ -26,9 +26,9 @@ such that they can be used when the repository cannot be accessed (e.g.,
 because there is no internet connection).
 
 From time to time, the bootstrapping directory should be updated. You can do
-this by calling the _UpdateFallbackScripts.bat. 
+this by calling the _UpdateBootstrappingScripts.bat. 
 Do not forget to COMMIT and PUSH after calling that script.
-_UpdateFallbackScripts.bat can also be called in the bootstrapping directory
+_UpdateBootstrappingScripts can also be called in the bootstrapping directory
 that is part of the IGLibScripts directory. In that case, this will 
 recursively clone another copy of IGLibScripts repository into the 
 bootstrapping directory. It can be removed later but this is not necessary.
