@@ -107,7 +107,7 @@ if not exist "%ModuleGitSubdir%" (
 )
 
 echo.
-echo ========
+echo ====
 echo CLEANING Module directory (removing untracked files and dirs):
 echo   "%ModuleDir%"
 echo Executing:
