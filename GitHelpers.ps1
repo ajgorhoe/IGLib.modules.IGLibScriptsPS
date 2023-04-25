@@ -80,6 +80,23 @@ function IsGitWorkingDirectoryNotWorking($DirectoryPath = $null)
 }
 #>
 
+function GitClone ($RepositoryAddress = $null, 
+	$CloneDirectory = $null, $BranchCommitOrTag = $null )
+{
+	if ("$RepositoryAddress" -eq "")
+	{
+		Write-Host "Error: GitClone: RepositoryAddress not specified"
+		return;
+	}
+	if ("$BranchCommitOrTag" -ne "")
+	{
+		. git clone "$RepositoryAddress" "$CloneDirectory" --branch "$BranchCommitOrTag"
+	} else {
+		. git clone "$RepositoryAddress" "$CloneDirectory"
+	}
+}
+
+
 
 function GitCloneOrUpdate($RepositoryAddress = $null,
 	$BranchTagOrCommit=$null)
