@@ -56,11 +56,11 @@ function GetGitRoot($DirectoryPath = $null)
 {
 	if ("$DirectoryPath" -eq "") { return $null; }
 	if (IsGitRoot($DirectoryPath)) { 
-		return (Resolve-Path $DirectoryPath); }
+		return (Resolve-Path $DirectoryPath).Path; }
 	return GetGitRoot $(GetParentDirectory("$DirectoryPath"))
 }
 
-
+<#
 function IsGitWorkingDirectoryNotWorking($DirectoryPath = $null)
 {
 	if ("$DirectoryPath" -eq "") { return $false; }
@@ -78,10 +78,11 @@ function IsGitWorkingDirectoryNotWorking($DirectoryPath = $null)
 	cd "$CurrentDir"
 	return $ret
 }
+#>
 
 
 function GitCloneOrUpdate($RepositoryAddress = $null,
-	$BranchTag)
+	$BranchTagOrCommit=$null)
 # Returns a set of parts of the string version of form "1.2.3.4"
 {
 	if ($versionString -eq $null -or $versionString -eq "") 
