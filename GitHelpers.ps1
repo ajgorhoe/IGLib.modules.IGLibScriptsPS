@@ -144,10 +144,10 @@ function GitUpdate ($CloneDirectory = $null, $BranchCommitOrTag = $null )
 			. git checkout "$BranchCommitOrTag"
 			. git pull
 		}
-		catch { ;  }
+		catch {   }
 		return 
 	}
-	finally {  }
+	finally { cd "$InitialDir"  }
 }
 
 function GitCloneOrUpdate($RepositoryAddress = $null, 
