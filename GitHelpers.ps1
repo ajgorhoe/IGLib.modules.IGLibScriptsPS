@@ -35,9 +35,9 @@ function GetParentDirectory($Path = $null)
 	return Split-Path "$Path"
 }
 
-function IsGitRoot($DirectoryPath = $null)
+function IsGitRoot($DirectoryPath = ".")
 {
-	if ("$DirectoryPath" -eq "") { return $false; }
+	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
 	$GitRefDirectoryName = ".git/refs"
 	$GitRefDirectoryPath = $(Join-Path "$DirectoryPath" `
 		"$GitRefDirectoryName")
@@ -45,26 +45,43 @@ function IsGitRoot($DirectoryPath = $null)
 }
 
 
-function IsGitWorkingDirectory($DirectoryPath = $null)
+function IsGitWorkingDirectory($DirectoryPath = ".")
 {
-	if ("$DirectoryPath" -eq "") { return $false; }
+	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
 	if (IsGitRoot($DirectoryPath)) { return $true; }
 	return IsGitWorkingDirectory $(GetParentDirectory("$DirectoryPath"))
 }
 
-function GetGitRoot($DirectoryPath = $null)
+function GetGitRoot($DirectoryPath = ".")
 {
-	if ("$DirectoryPath" -eq "") { return $null; }
+	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
 	if (IsGitRoot($DirectoryPath)) { 
 		return (Resolve-Path $DirectoryPath).Path; }
 	return GetGitRoot $(GetParentDirectory("$DirectoryPath"))
+}
+
+function GetGitBranch($DirectoryPath = ".")
+{
+	$InitialDir = $(pwd).Path
+	$ret = $null
+	try {
+		if ("$DirectoryPath" -ne "") { cd $"DirectoryPath" }
+		return $(git rev-parse --abbrev-ref HEAD)
+	}
+	catch {
+		Write-Host "ERROR in IsGitWorkingDirectory(): $($_.Exception.Message)"
+	}
+	finally {
+		cd "$InitialDir"
+	}
+	return $ret
 }
 
 <#
 function IsGitWorkingDirectoryNotWorking($DirectoryPath = $null)
 {
 	if ("$DirectoryPath" -eq "") { return $false; }
-	$CurrentDir = $(pwd).Path
+	$InitialDir = $(pwd).Path
 	$ret = $false
 	try {
 		cd "$DirectoryPath"
@@ -75,7 +92,7 @@ function IsGitWorkingDirectoryNotWorking($DirectoryPath = $null)
 		$ret = $false
 		Write-Host "ERROR in IsGitWorkingDirectory(): $($_.Exception.Message)"
 	}
-	cd "$CurrentDir"
+	cd "$InitialDir"
 	return $ret
 }
 #>
@@ -96,6 +113,44 @@ function GitClone ($RepositoryAddress = $null,
 	}
 }
 
+function GitUpdate ($CloneDirectory = $null, $BranchCommitOrTag = $null )
+{
+	$InitialDir = $(pwd).Path
+	$ret = $null
+	if ("$CloneDirectory" -eq "") { $CloneDirectory = "." }
+	cd "$CloneDirectory"
+	try {
+		if ("$BranchCommitOrTag" -eq "")
+		{
+			# branch not specified
+			. git pull
+			return $ret
+		}
+		try
+		{
+			. git fetch --all --tags
+			. git checkout "$BranchCommitOrTag"
+			. git pull
+		}
+		catch { }
+		return $ret
+		
+		
+		if ("$BranchCommitOrTag" -ne "")
+		{
+			. git clone "$RepositoryAddress" "$CloneDirectory" --branch "$BranchCommitOrTag"
+		} else {
+			. git clone "$RepositoryAddress" "$CloneDirectory"
+		}
+	}
+	catch {
+		Write-Host "ERROR in GitUpdate(): $($_.Exception.Message)"
+	}
+	finally {
+		cd "$InitialDir"
+	}
+	return $ret
+}
 
 
 function GitCloneOrUpdate($RepositoryAddress = $null,
