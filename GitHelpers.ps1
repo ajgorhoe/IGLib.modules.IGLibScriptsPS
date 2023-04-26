@@ -105,6 +105,14 @@ function GitClone ($RepositoryAddress = $null,
 		Write-Host "Error: GitClone: RepositoryAddress not specified"
 		return;
 	}
+	if ("$CloneDirectory" -ne "")
+	{
+		if (IsGitRoot "$CloneDirectory")
+		{
+			Write-Host "Directory already contains Git repository: $CloneDirectory"
+			return null;
+		}
+	}
 	if ("$BranchCommitOrTag" -ne "")
 	{
 		. git clone "$RepositoryAddress" "$CloneDirectory" --branch "$BranchCommitOrTag"
@@ -119,12 +127,16 @@ function GitUpdate ($CloneDirectory = $null, $BranchCommitOrTag = $null )
 	$ret = $null
 	if ("$CloneDirectory" -eq "") { $CloneDirectory = "." }
 	cd "$CloneDirectory"
+	if (IsGitWorkingDirectory "." -eq $false)
+	{
+		return
+	}
 	try {
 		if ("$BranchCommitOrTag" -eq "")
 		{
 			# branch not specified
 			. git pull
-			return $ret
+			return 
 		}
 		try
 		{
@@ -132,26 +144,21 @@ function GitUpdate ($CloneDirectory = $null, $BranchCommitOrTag = $null )
 			. git checkout "$BranchCommitOrTag"
 			. git pull
 		}
-		catch { }
-		return $ret
-		
-		
-		if ("$BranchCommitOrTag" -ne "")
-		{
-			. git clone "$RepositoryAddress" "$CloneDirectory" --branch "$BranchCommitOrTag"
-		} else {
-			. git clone "$RepositoryAddress" "$CloneDirectory"
-		}
+		catch { ;  }
+		return 
 	}
-	catch {
-		Write-Host "ERROR in GitUpdate(): $($_.Exception.Message)"
-	}
-	finally {
-		cd "$InitialDir"
-	}
-	return $ret
+	finally {  }
 }
 
+function GitCloneOrUpdate($RepositoryAddress = $null, 
+	$CloneDirectory = $null, $BranchCommitOrTag = $null )
+{
+	if ("$CloneDirectory" -eq "") { $CloneDirectory = "." }
+	if ("$RepositoryAddres" -ne "")
+	{
+		GitClone "$RepositoryAddres" "$CloneDirectory" "$BranchCommitOrTag"
+	}
+}
 
 function GitCloneOrUpdate($RepositoryAddress = $null,
 	$BranchTagOrCommit=$null)
