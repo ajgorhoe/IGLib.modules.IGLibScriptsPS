@@ -82,7 +82,7 @@ function GetGitBranch($DirectoryPath = ".")
 		$ret = $(git rev-parse --abbrev-ref HEAD)
 	}
 	catch {
-		Write-Host "ERROR in IsGitWorkingDirectory(): $($_.Exception.Message)"
+		Write-Host "ERROR in GetGitBranch(): $($_.Exception.Message)"
 	}
 	finally {
 		cd "$InitialDir"
@@ -90,6 +90,29 @@ function GetGitBranch($DirectoryPath = ".")
 	return $ret
 }
 
+function GetGitCommit($DirectoryPath = ".")
+{
+	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
+	if (-not (IsGitWorkingDirectory "$DirectoryPath"))
+	{
+		return $null
+	}
+	$InitialDir = $(pwd).Path
+	$ret = $null
+	try {
+		if ("$DirectoryPath" -ne "") { cd "$DirectoryPath" }
+		$ret = $(git rev-parse "HEAD")
+	}
+	catch {
+		Write-Host "ERROR in GetGitCommit(): $($_.Exception.Message)"
+	}
+	finally {
+		cd "$InitialDir"
+	}
+	return $ret
+}
+
+<#
 function GetGitBranch($DirectoryPath = ".")
 {
 	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
@@ -105,7 +128,7 @@ function GetGitBranch($DirectoryPath = ".")
 		cd "$InitialDir"
 	}
 	return $null
-}
+} #>
 
 function GitClone ($RepositoryAddress = $null, 
 	$CloneDirectory = $null, $BranchCommitOrTag = $null )
