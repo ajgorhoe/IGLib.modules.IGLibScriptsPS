@@ -131,7 +131,8 @@ function GitUpdate ($CloneDirectory = $null, $BranchCommitOrTag = $null )
 	{
 		return
 	}
-	try {
+	try 
+	{
 		if ("$BranchCommitOrTag" -eq "")
 		{
 			# branch not specified
