@@ -81,26 +81,6 @@ function GetGitBranch($DirectoryPath = ".")
 	return $ret
 }
 
-<#
-function IsGitWorkingDirectoryNotWorking($DirectoryPath = $null)
-{
-	if ("$DirectoryPath" -eq "") { return $false; }
-	$InitialDir = $(pwd).Path
-	$ret = $false
-	try {
-		cd "$DirectoryPath"
-		$ret = $(git rev-parse --is-inside-work-tree)
-		Write-Host "Error did NOT occur in IsGitWorkingDirectory()."
-	}
-	catch {
-		$ret = $false
-		Write-Host "ERROR in IsGitWorkingDirectory(): $($_.Exception.Message)"
-	}
-	cd "$InitialDir"
-	return $ret
-}
-#>
-
 function GitClone ($RepositoryAddress = $null, 
 	$CloneDirectory = $null, $BranchCommitOrTag = $null )
 {
