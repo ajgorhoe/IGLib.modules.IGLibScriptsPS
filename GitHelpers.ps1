@@ -53,7 +53,9 @@ function IsGitWorkingDirectory($DirectoryPath = ".")
 {
 	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
 	if (IsGitRoot($DirectoryPath)) { return $true; }
-	return IsGitWorkingDirectory $(GetParentDirectory("$DirectoryPath"))
+	$ParentDir = GetParentDirectory "$DirectoryPath"
+	if ("$ParentDir" -eq "") { return $false }
+	return IsGitWorkingDirectory "$ParentDir"
 }
 
 function GetGitRoot($DirectoryPath = ".")
@@ -61,7 +63,9 @@ function GetGitRoot($DirectoryPath = ".")
 	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
 	if (IsGitRoot($DirectoryPath)) { 
 		return (Resolve-Path $DirectoryPath).Path; }
-	return GetGitRoot $(GetParentDirectory("$DirectoryPath"))
+	$ParentDir = GetParentDirectory "$DirectoryPath"
+	if ("$ParentDir" -eq "") { return $null }
+	return GetGitRoot "$ParentDir"
 }
 
 function GetGitBranch($DirectoryPath = ".")
