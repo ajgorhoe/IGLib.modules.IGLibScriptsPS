@@ -16,12 +16,12 @@ Write-Host "Verification: ScriptHasRun_GitHelpers = $ScriptHasRun_GitHelpers `n"
 # Define location where repository is cloned, branch to be checked out, etc.:
 $RepositoryDirectory=Join-Path "$PSScriptRoot" "testrepos"
 
-$RepoIGLibScriptsSubdir=IGLibScripts
-$RepoIGLibScriptsAddress=https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git
+$RepoIGLibScriptsSubdir="IGLibScripts"
+$RepoIGLibScriptsAddress="https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git"
 $RepoIGLibScriptsBranchCloned=$null
-$RepoIGLibScriptsBranch=remotes/origin/release/21_08_release_1.9.1
-$RepoIGLibScriptsTag=save/21_11_26_IglibContainsExternal_DemoAppsWork
-$RepoIGLibScriptsBranchDefault=master
+$RepoIGLibScriptsBranch="remotes/origin/release/21_08_release_1.9.1"
+$RepoIGLibScriptsTag="save/21_11_26_IglibContainsExternal_DemoAppsWork"
+$RepoIGLibScriptsBranchDefault="master"
 
 # Parameters for specific scripts:
 $RepoIGLibScriptsParam = @($RepoIGLibScriptsAddress, 
@@ -32,7 +32,7 @@ $RepoParams = @($RepoIGLibScriptsParam)
 Write-Host "`n`nCloning repository into $RepoIGLibScriptsSubdir ..."
 $RepoDir=Join-Path "$RepositoryDirectory" "$RepoIGLibScriptsSubdir"
 GitClone $RepoIGLibScriptsAddress $RepoDir
-Write-Host "`nCloning finished. Verification (id Git repo): " $(IsGitRoot $RepoDir)
+Write-Host "`nCloning finished. Verification (id Git repo): " $(IsGitRoot $RepoDir) "`\n"
 
 
 
