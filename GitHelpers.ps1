@@ -64,7 +64,11 @@ function GetGitRoot($DirectoryPath = ".")
 	if (IsGitRoot($DirectoryPath)) { 
 		return (Resolve-Path $DirectoryPath).Path; }
 	$ParentDir = GetParentDirectory "$DirectoryPath"
-	if ("$ParentDir" -eq "") { return $null }
+	if ("$ParentDir" -eq "") 
+	{
+		Write-Host "`GetGitRoot(): not a Git working directory.`n"
+		return $null 
+	}
 	return GetGitRoot "$ParentDir"
 }
 
@@ -73,6 +77,7 @@ function GetGitBranch($DirectoryPath = ".")
 	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
 	if (-not (IsGitWorkingDirectory "$DirectoryPath"))
 	{
+		Write-Host "`nGetGitBranch(): not a Git working directory.`n"
 		return $null
 	}
 	$InitialDir = $(pwd).Path
@@ -82,7 +87,7 @@ function GetGitBranch($DirectoryPath = ".")
 		$ret = $(git rev-parse --abbrev-ref HEAD)
 	}
 	catch {
-		Write-Host "ERROR in GetGitBranch(): $($_.Exception.Message)"
+		Write-Host "ERROR in GetGitBranch(): $($_.Exception.Message)`n"
 	}
 	finally {
 		cd "$InitialDir"
@@ -95,16 +100,17 @@ function GetGitCommit($DirectoryPath = ".")
 	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
 	if (-not (IsGitWorkingDirectory "$DirectoryPath"))
 	{
+		Write-Host "`nGetGitCommit(): not a Git working directory.`n"
 		return $null
 	}
 	$InitialDir = $(pwd).Path
 	$ret = $null
 	try {
 		if ("$DirectoryPath" -ne "") { cd "$DirectoryPath" }
-		$ret = $(git rev-parse "HEAD")
+		$ret = $(git rev-parse HEAD)
 	}
 	catch {
-		Write-Host "ERROR in GetGitCommit(): $($_.Exception.Message)"
+		Write-Host "`nERROR in GetGitCommit(): $($_.Exception.Message)`n"
 	}
 	finally {
 		cd "$InitialDir"
@@ -112,37 +118,20 @@ function GetGitCommit($DirectoryPath = ".")
 	return $ret
 }
 
-<#
-function GetGitBranch($DirectoryPath = ".")
-{
-	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
-	$InitialDir = $(pwd).Path
-	try {
-		if ("$DirectoryPath" -ne "") { cd "$DirectoryPath" }
-		return $(git rev-parse --abbrev-ref HEAD)
-	}
-	catch {
-		Write-Host "ERROR in IsGitWorkingDirectory(): $($_.Exception.Message)"
-	}
-	finally {
-		cd "$InitialDir"
-	}
-	return $null
-} #>
 
 function GitClone ($RepositoryAddress = $null, 
 	$CloneDirectory = $null, $BranchCommitOrTag = $null )
 {
 	if ("$RepositoryAddress" -eq "")
 	{
-		Write-Host "Error: GitClone: RepositoryAddress not specified"
+		Write-Host "Error: GitClone(): RepositoryAddress not specified"
 		return;
 	}
 	if ("$CloneDirectory" -ne "")
 	{
-		if (IsGitRoot "$CloneDirectory")
+		if (IsGitWorkingDirectory "$CloneDirectory")
 		{
-			Write-Host "Directory already contains Git repository: $CloneDirectory"
+			Write-Host "`nGitClone(): Directory already contains a Git repository: $CloneDirectory`n"
 			return null;
 		}
 	}
@@ -154,18 +143,19 @@ function GitClone ($RepositoryAddress = $null,
 	}
 }
 
-function GitUpdate ($CloneDirectory = $null, $BranchCommitOrTag = $null )
+function GitUpdate ($CloneDirectory = ".", $BranchCommitOrTag = $null )
 {
 	$InitialDir = $(pwd).Path
 	$ret = $null
 	if ("$CloneDirectory" -eq "") { $CloneDirectory = "." }
-	cd "$CloneDirectory"
-	if (IsGitWorkingDirectory "." -eq $false)
+	if (-not (IsGitWorkingDirectory "$CloneDirectory"))
 	{
+		Write-Host "`nError: GitUpdate(): Not a Git working directory: $CloneDirectory`n"
 		return
 	}
 	try 
 	{
+		cd "$CloneDirectory"
 		if ("$BranchCommitOrTag" -eq "")
 		{
 			# branch not specified
