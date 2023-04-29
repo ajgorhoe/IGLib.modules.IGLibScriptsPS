@@ -4,9 +4,9 @@
 set-alias print Write-Host
 
 
-function GetScriptDirectory() { $PSScriptRoot }
+function ScriptDir() { $PSScriptRoot }
 
-function GetCurrentDirectory() { return $(pwd).Path }
+function CurrentDir() { return $(pwd).Path }
 
 function DirectoryExists(<#[system.string]#> $DirectoryPath = $null)
 {
@@ -26,7 +26,17 @@ function PathExists($Path = $null)
 	return Test-Path "$Path"
 }
 
-function GetParentDirectory($Path = $null)
+function ParentDir($Path = $null)
+{
+	if ("$Path" -eq "") { return $false; }
+	if (PathExists($Path))
+	{
+		return Split-Path "$Path" -Resolve
+	}
+	return Split-Path "$Path"
+}
+
+function RootDir($Path = $null)
 {
 	if ("$Path" -eq "") { return $false; }
 	if (PathExists($Path))

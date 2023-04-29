@@ -22,7 +22,7 @@ function IsGitWorkingDirectory($DirectoryPath = ".")
 {
 	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
 	if (IsGitRoot($DirectoryPath)) { return $true; }
-	$ParentDir = GetParentDirectory "$DirectoryPath"
+	$ParentDir = ParentDir "$DirectoryPath"
 	if ("$ParentDir" -eq "") { return $false }
 	return IsGitWorkingDirectory "$ParentDir"
 }
@@ -32,7 +32,7 @@ function GetGitRoot($DirectoryPath = ".")
 	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
 	if (IsGitRoot($DirectoryPath)) { 
 		return (Resolve-Path $DirectoryPath).Path; }
-	$ParentDir = GetParentDirectory "$DirectoryPath"
+	$ParentDir = ParentDir "$DirectoryPath"
 	if ("$ParentDir" -eq "") 
 	{
 		Write-Host "`GetGitRoot(): not a Git working directory.`n"
