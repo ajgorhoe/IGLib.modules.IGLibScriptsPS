@@ -1,12 +1,18 @@
 
 
 # Auxiliary definitions:
-set-alias print Write-Host
+Set-Alias print Write-Host
+Set-Alias alias Set-Alias
+Set-Alias aliases Get-Alias
+alias ScripttDir GetScriptDirectory
+alias CurrentDir GetCurrentDirectory
+alias DirExists DirectoryExists
+alias ParentDir GetParentDirectory
+aias RootDir GetRootDirectory
 
+function GetScriptDirectory() { $PSScriptRoot }
 
-function ScriptDir() { $PSScriptRoot }
-
-function CurrentDir() { return $(pwd).Path }
+function GetCurrentDirectory() { return $(pwd).Path }
 
 function DirectoryExists(<#[system.string]#> $DirectoryPath = $null)
 {
@@ -26,7 +32,7 @@ function PathExists($Path = $null)
 	return Test-Path "$Path"
 }
 
-function ParentDir($Path = $null)
+function GetParentDirectory($Path = $null)
 {
 	if ("$Path" -eq "") { return $false; }
 	if (PathExists($Path))
@@ -36,9 +42,9 @@ function ParentDir($Path = $null)
 	return Split-Path "$Path"
 }
 
-function RootDir($Path = $null)
+function GetRootDirectory($Path = $null)
 {
-	if ("$Path" -eq "") { return $false; }
+	if ("$Path" -eq "") { $Path = "."; }
 	if (PathExists($Path))
 	{
 		return Split-Path "$Path" -Resolve
