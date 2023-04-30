@@ -25,7 +25,7 @@ function PowerShellInfo()
 function ArrayToString($ArrayVar = $null)
 {
 	if ("$ArrayVar" -eq "") { 
-		Write-Host "`nError in ArrayToString(): null argument.`n"
+		Write-Host "`nError in ArrayToString(): null argument or not an array.`n"
 		return $null; 
 	}
 	if ("$($ArrayVar.GetType().BaseType.Name)" -ne "Array") 
@@ -36,17 +36,25 @@ function ArrayToString($ArrayVar = $null)
 	}
 	$count = $ArrayVar.Count;
 	$sb = New-Object -TypeName "System.Text.StringBuilder";
-	$sb.Append("@(");
+	# Remark: Assignments $null = 
+	$null = $sb.Append("@(");
 	foreach ($ind in ( (0..$($count-1)) )  )
 	{
-		Write-Host $sb.ToString()
-		$sb.Append($ArrayVar[$ind]);
-		if ($ind -lt $count)
+		# Write-Host $sb.ToString()
+		$null = $sb.Append($ArrayVar[$ind]);
+		if ($ind -lt $count-1)
 		{
-			$sb.Append(", ");
+			$null = $sb.Append(", ");
 		}
 	}
-	return "$sb.ToString()";
+	$null = $sb.Append(")");
+	return $($sb.ToString());
+}
+
+function PrintArray($ArrayVar = $null)
+{
+	$str = ArrayToString $ArrayVar
+	Write-Host "$str"
 }
 
 function DictionaryToString(DictVar = $null)
