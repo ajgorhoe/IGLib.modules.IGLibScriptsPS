@@ -2,6 +2,13 @@
 # Helper utilities for dealing with reopsitories
 # https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git
 
+alias GitRoot GetGitRoot
+alias GitBranch GetGitBranch
+alias GitCommit GetGitCommit
+alias ShortGitCommit GetShortGitCommit
+alias GitShortCommit GetShortGitCommit
+
+
 #Auxiliary variables - enable verification in the calling script:
 $ScriptHasRun_GitHelpers = $true
 $ScriptDirectory_GitHelpers = $PSScriptRoot
