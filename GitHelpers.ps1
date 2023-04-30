@@ -1,5 +1,5 @@
 
-# Helper utilities for dealing with reopsitories:
+# Helper utilities for dealing with reopsitories
 # https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git
 
 #Auxiliary variables - enable verification in the calling script:

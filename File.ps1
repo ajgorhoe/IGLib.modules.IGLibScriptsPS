@@ -1,4 +1,11 @@
 
+# Helper utilities for dealing with file paths and other file system related tasks
+# https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git
+
+#Auxiliary variables - enable verification in the calling script:
+$ScriptHasRun_File = $true
+$ScriptDirectory_File = $PSScriptRoot
+
 
 # Auxiliary definitions:
 Set-Alias print Write-Host
