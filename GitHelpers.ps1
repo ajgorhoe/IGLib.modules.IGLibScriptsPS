@@ -64,7 +64,7 @@ function GetGitBranch($DirectoryPath = ".")
 	return $ret
 }
 
-function GetGitCommit($DirectoryPath = ".")
+function GetGitCommit($DirectoryPath = ".", $ShortLength)
 {
 	if ("$DirectoryPath" -eq "") { $DirectoryPath = "." }
 	if (-not (IsGitWorkingDirectory "$DirectoryPath"))
@@ -77,6 +77,10 @@ function GetGitCommit($DirectoryPath = ".")
 	try {
 		if ("$DirectoryPath" -ne "") { cd "$DirectoryPath" }
 		$ret = $(git rev-parse HEAD)
+		if ("$ShortLength" -ne "")
+		{
+			$ret = $ret[0..$ShortLength] -join''
+		}
 	}
 	catch {
 		Write-Host "`nERROR in GetGitCommit(): $($_.Exception.Message)`n"
@@ -85,6 +89,11 @@ function GetGitCommit($DirectoryPath = ".")
 		cd "$InitialDir"
 	}
 	return $ret
+}
+
+function GetShortGitCommit($DirectoryPath = ".")
+{
+return GetGitCommit $DirectoryPath 4;
 }
 
 
