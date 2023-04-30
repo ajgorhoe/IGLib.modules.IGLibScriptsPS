@@ -24,10 +24,29 @@ function PowerShellInfo()
 
 function ArrayToString($ArrayVar = $null)
 {
-	if ("$ArrayVar" -eq "") { return "$null"; }
-	foreach ($key in $dictionary.Keys) { 
-		Write-Host "Key: $key    Value: $($dictionary[$key])" 
-	} 
+	if ("$ArrayVar" -eq "") { 
+		Write-Host "`nError in ArrayToString(): null argument.`n"
+		return $null; 
+	}
+	if ("$($ArrayVar.GetType().BaseType.Name)" -ne "Array") 
+	{ 
+		Write-Host "`nError in ArrayToString(): not an array.`n"
+		Write-Host "$($ArrayVar.GetType().BaseType.Name) instead of 'Array'`n"
+		return $null; 
+	}
+	$count = $ArrayVar.Count;
+	$sb = New-Object -TypeName "System.Text.StringBuilder";
+	$sb.Append("@(");
+	foreach ($ind in ( (0..$($count-1)) )  )
+	{
+		Write-Host $sb.ToString()
+		$sb.Append($ArrayVar[$ind]);
+		if ($ind -lt $count)
+		{
+			$sb.Append(", ");
+		}
+	}
+	return "$sb.ToString()";
 }
 
 function DictionaryToString(DictVar = $null)
@@ -37,6 +56,8 @@ function DictionaryToString(DictVar = $null)
 		Write-Host "Key: $key    Value: $($dictionary[$key])" 
 	} 
 }
+
+
 
 function RunWithPowerShell($Command)
 {
