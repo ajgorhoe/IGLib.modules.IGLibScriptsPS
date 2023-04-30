@@ -8,7 +8,7 @@ alias ScripttDir GetScriptDirectory
 alias CurrentDir GetCurrentDirectory
 alias DirExists DirectoryExists
 alias ParentDir GetParentDirectory
-aias RootDir GetRootDirectory
+alias RootDir GetRootDirectory
 
 function GetScriptDirectory() { $PSScriptRoot }
 
@@ -32,9 +32,9 @@ function PathExists($Path = $null)
 	return Test-Path "$Path"
 }
 
-function GetParentDirectory($Path = $null)
+function GetParentDirectory($Path = ".")
 {
-	if ("$Path" -eq "") { return $false; }
+	if ("$Path" -eq "") { $Path = "." }
 	if (PathExists($Path))
 	{
 		return Split-Path "$Path" -Resolve
@@ -42,14 +42,26 @@ function GetParentDirectory($Path = $null)
 	return Split-Path "$Path"
 }
 
-function GetRootDirectory($Path = $null)
+function GetRootDirectory($Path = $null, $ChildPath = $null)
 {
-	if ("$Path" -eq "") { $Path = "."; }
-	if (PathExists($Path))
+#	print GetRootDirectory called with:
+#	print "  Path: $Path"
+#	print "  ChildPath: $ChildPath"
+	if ("$Path" -eq "" -and "$ChildPath" -eq "") { $Path = "."; }
+	if ($(PathExists("$Path")) -or $true)
 	{
-		return Split-Path "$Path" -Resolve
+		$ParentPath = GetParentDirectory($Path);
+#		print "Path: $Path"
+#		print "ParentPath: $ParentPath"
+		if ("$ParentPath" -eq "")  {
+			return $Path; 
+		}
+#		print "Calling: GetRootDirectory($ParentPath, $Path)";
+		return GetRootDirectory $ParentPath $Path
+	} else
+	{
+		return $null;
 	}
-	return Split-Path "$Path"
 }
 
 
