@@ -1,6 +1,6 @@
 
 # Powershell info and helper utilities
-# https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git
+# https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git
 
 # Remark: make sure you have set the execution policy correctly, e.g. (as admin.):
 #   Set-ExecutionPolicy RemoteSigned
@@ -19,7 +19,7 @@ function PowerShellInfo()
 	Write-Host 'Version information ($PSVersionTable):'
 	# Write-Host $PSVersionTable
 	# $PSVersionTable
-	$PSVersionTable | ft -AutoSize
+	$PSVersionTable | Format-Table -AutoSize
 }
 
 function ArrayToString($ArrayVar = $null)
@@ -57,7 +57,7 @@ function PrintArray($ArrayVar = $null)
 	Write-Host "$str"
 }
 
-function DictionaryToString(DictVar = $null)
+function DictionaryToString($DictVar = $null)
 {
 	if ("$DictVar" -eq "") { return "$null"; }
 	foreach ($key in $dictionary.Keys) { 

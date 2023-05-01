@@ -1,6 +1,8 @@
 
 # Helper utilities for dealing with file paths and other file system related tasks
-# https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git
+# https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git
+
+
 
 #Auxiliary variables - enable verification in the calling script:
 $ScriptHasRun_File = $true
@@ -11,15 +13,23 @@ $ScriptDirectory_File = $PSScriptRoot
 Set-Alias print Write-Host
 Set-Alias alias Set-Alias
 Set-Alias aliases Get-Alias
-alias ScripttDir GetScriptDirectory
-alias CurrentDir GetCurrentDirectory
-alias DirExists DirectoryExists
-alias ParentDir GetParentDirectory
-alias RootDir GetRootDirectory
+Set-Alias ScripttDir GetScriptDirectory
+Set-Alias CurrentDir GetCurrentDirectory
+Set-Alias AbsolutePath GetAbsolutePath
+Set-Alias FullPath GetAbsolutePath
+Set-Alias DirExists DirectoryExists
+Set-Alias ParentDir GetParentDirectory
+Set-Alias RootDir GetRootDirectory
 
 function GetScriptDirectory() { $PSScriptRoot }
 
-function GetCurrentDirectory() { return $(pwd).Path }
+function GetCurrentDirectory() { return $(Get-Location).Path }
+
+function GetAbsolutePath($Path = $null)
+{
+	if ("$Path" -eq "") { $Path = "."; }
+	return $(Resolve-Path "$Path").Path;
+}
 
 function DirectoryExists(<#[system.string]#> $DirectoryPath = $null)
 {
