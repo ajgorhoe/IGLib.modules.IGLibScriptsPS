@@ -29,8 +29,8 @@ function CheckScriptExecuted($NotedScriptPath, $ScriptPath)
 	}
 }
 
+# Check whether the current script has already been executed before:
 CheckScriptExecuted $ExecutedScriptPath_Common $MyInvocation.MyCommand.Path;
-
 # Store scritp path in a variable in order to enable later verifications:
 $ExecutedScriptPath_Common = $MyInvocation.MyCommand.Path
 
