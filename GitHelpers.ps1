@@ -58,7 +58,7 @@ function GetGitBranch($DirectoryPath = ".")
 		Write-Host "`nGetGitBranch(): not a Git working directory.`n"
 		return $null
 	}
-	$InitialDir = $(pwd).Path
+	$InitialDir = $(Get-Location).Path
 	$ret = $null
 	try {
 		if ("$DirectoryPath" -ne "") { cd "$DirectoryPath" }
@@ -81,7 +81,7 @@ function GetGitCommit($DirectoryPath = ".", $ShortLength)
 		Write-Host "`nGetGitCommit(): not a Git working directory.`n"
 		return $null
 	}
-	$InitialDir = $(pwd).Path
+	$InitialDir = $(Get-Location).Path
 	$ret = $null
 	try {
 		if ("$DirectoryPath" -ne "") { cd "$DirectoryPath" }

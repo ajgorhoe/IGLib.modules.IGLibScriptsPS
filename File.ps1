@@ -2,7 +2,7 @@
 # Helper utilities for dealing with file paths and other file system related tasks
 # https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git
 
-# Definitions from other files:
+# Execute definitions from other files:
 . "$(Join-Path "$PSScriptRoot" "Common.ps1")"
 
 # Check whether the current script has already been executed before:
@@ -94,5 +94,21 @@ function GetRootDirectory($Path = $null, $ChildPath = $null)
 	}
 }
 
+# Recursively copies the directory at $Path to the $Destination.
+function CopyDirectoryRecursive($DirectoryPath, $DestinationPath)
+{
+	Copy-Item "$DirectoryPath" -Destination "$DestinationPath" -Recurse
+}
 
+# Recursively removes the specified directory.
+function RemoveDirectoryRecursive($DirectoryPath)
+{
+	Remove-Item -Recurse -Force "$DirectoryPath"
+}
+
+# Returns all files contained in the spexified directories
+function GetFilesRecursively($DirectoryPath, $Filter = $null)
+{
+	return Get-ChildItem "$DirectoryPath" -Filter "$Filter" -Recurse | % { $_.FullName }
+}
 
