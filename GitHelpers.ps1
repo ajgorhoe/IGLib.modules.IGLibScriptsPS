@@ -1,6 +1,6 @@
 
 # Helper utilities for dealing with reopsitories
-# https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git
+# https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git
 
 # Execute definitions from other files:
 . $(Join-Path "$PSScriptRoot" "File.ps1")

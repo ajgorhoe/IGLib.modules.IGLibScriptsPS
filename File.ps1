@@ -17,12 +17,19 @@ Set-Alias aliases Get-Alias
 Set-Alias ScripttDir GetScriptDirectory
 Set-Alias CurrentDir GetCurrentDirectory
 Set-Alias FullPath GetAbsolutePath
+Set-Alias IsFile FileExists
 Set-Alias DirExists DirectoryExists
+Set-Alias IsDir DirectoryExists
 Set-Alias AbsolutePath GetAbsolutePath
 Set-Alias FileName GetFileName
 Set-Alias GetFileOrDirectoryName GetFileName
 Set-Alias ParentDir GetParentDirectory
 Set-Alias RootDir GetRootDirectory
+Set-Alias CopyDir CopyDirectoryRecursive
+Set-Alias RemoveDir RemoveDirectoryRecursive
+Set-Alias Files GetFilesRecursively
+Set-Alias FilesRun RunOnFilesRecursively
+Set-Alias OnFiles RunOnFilesRecursively
 
 function GetScriptDirectory() { $PSScriptRoot }
 
@@ -107,8 +114,69 @@ function RemoveDirectoryRecursive($DirectoryPath)
 }
 
 # Returns all files contained in the spexified directories
-function GetFilesRecursively($DirectoryPath, $Filter = $null)
+function GetFilesRecursively($DirectoryPath, $Filter = $null, 
+	$IncludeFiles = $true, $IncludeDirectories = $true)
 {
-	return Get-ChildItem "$DirectoryPath" -Filter "$Filter" -Recurse | % { $_.FullName }
+	if (-not $(DirectoryExists $DirectoryPath))
+	{
+		return $null;
+	}
+	return Get-ChildItem "$DirectoryPath" -Filter "$Filter" -Recurse | ForEach-Object { $_.FullName }
+	# return Get-ChildItem "$DirectoryPath" -Filter "$Filter" -Recurse | % { $_.FullName }
 }
+
+function RunOnFilesRecursively($DirectoryPath, $Filter = $null, 
+	$IncludeFiles = $true, $IncludeDirectories = $true, $Function)
+{
+	foreach ($file in $(GetFilesRecursively($DirectoryPath, $Filter, $IncludeFiles, $IncludeDirectories)))
+	{
+		Write-Host "Executing on file: $(FileName $File)..."
+		$result_75937548 = . $function $file
+		Write-Host "Result of function evaluation: $result_75937548"
+	}
+}
+
+function ExamplesRunOnFilesRecursive()
+{
+	# Calculation of total size of filtered files contained in a directory (recursive) - manual using Files:
+	# Remark - in PowerShell, $($null + 1) evaluates to 1. 
+	# Remark: running with trailing '.' will pass variable values to the calling context.
+	. Files "." "*.ps1" | ForEach-Object {   # Could also use %
+		$f=$_;  
+		if ($(IsFile $f)) {
+			$TotalLength = $TotalLength +  $(Get-Item  $f).Length;
+		}
+	}
+	Write-Host "`nTotal size of all .ps1 files included in the current directory: $TotalLength"
+	# The same calculation using OnFiles (=RunOnFilesRecursively), with script block (anonumous function):
+	# Reset the total size:
+	$TotalLength = 0
+	. OnFiles "." "*.ps1" -Function { 
+		param ($filePath) # Define function parameter list within the block, like in scripts
+		if ($(IsFile $filePath)) {
+			$TotalLength = $TotalLength +  $(Get-Item  $filePath).Length;
+			Write-Host "Accummulated value: TotalLength = $TotalLength ."
+		}
+	}
+	Write-Host "`nTotal size via OnFiles, using anonymous function: $TotalLength"
+	# Via defined function:
+	function AddFileLength ($filePath) {
+		if ($(IsFile $filePath)) {
+			$TotalLength = $TotalLength +  $(Get-Item  $filePath).Length;
+			Write-Host "Accummulated value: TotalLength = $TotalLength ."
+		}
+	}
+	. OnFiles "." "*.ps1" -Function AddFileLength
+	Write-Host "`nTotal size via OnFiles, using named function AddFileLength(): $TotalLength"
+}
+
+
+ExamplesRunOnFilesRecursive
+
+
+
+
+
+
+
 
