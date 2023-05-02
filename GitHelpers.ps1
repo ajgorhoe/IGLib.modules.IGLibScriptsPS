@@ -2,18 +2,20 @@
 # Helper utilities for dealing with reopsitories
 # https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git
 
-alias GitRoot GetGitRoot
-alias GitBranch GetGitBranch
-alias GitCommit GetGitCommit
-alias ShortGitCommit GetShortGitCommit
-alias GitShortCommit GetShortGitCommit
-
-
-#Auxiliary variables - enable verification in the calling script:
-$ScriptHasRun_GitHelpers = $true
-$ScriptDirectory_GitHelpers = $PSScriptRoot
-
+# Execute definitions from other files:
 . $(Join-Path "$PSScriptRoot" "File.ps1")
+
+# Check whether the current script has already been executed before:
+CheckScriptExecuted $ExecutedScriptPath_GitHelpers $MyInvocation.MyCommand.Path;
+# Store scritp path in a variable in order to enable later verifications:
+$ExecutedScriptPath_GitHelpers = $MyInvocation.MyCommand.Path
+
+Set-Alias GitRoot GetGitRoot
+Set-Alias GitBranch GetGitBranch
+Set-Alias GitCommit GetGitCommit
+Set-Alias ShortGitCommit GetShortGitCommit
+Set-Alias GitShortCommit GetShortGitCommit
+
 
 function IsGitRoot($DirectoryPath = ".")
 {

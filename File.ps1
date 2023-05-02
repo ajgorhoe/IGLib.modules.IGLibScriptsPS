@@ -2,30 +2,12 @@
 # Helper utilities for dealing with file paths and other file system related tasks
 # https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git
 
+# Definitions from other files:
+. "$(Join-Path "$PSScriptRoot" "Common.ps1")"
 
-
-function CheckScriptExecuted($NotedScriptPath, $ScriptPath)
-{
-	if ("$NotedScriptPath" -eq "") { return; }
-	$ScriptFile = $(Split-Path "$ScriptPath" -Leaf)
-	if ("$NotedScriptPath" -ne "")
-	{
-		if (  "$((Resolve-Path($NotedScriptPath)).Path)" -eq
-			"$(Resolve-Path($ScriptPath))" )
-		{
-			Write-Host "`nThe script has already been executed, refreshing definitions: $ScriptFile`n"
-		} else
-		{
-			Write-Host "`nWarning: Script has already been called from a different location: $ScriptFile"
-			Write-Host "Previous location: $NotedScriptPath"
-			Write-Host "Current location:  $ScriptPath`n"
-		}
-	}
-}
-
+# Check whether the current script has already been executed before:
 CheckScriptExecuted $ExecutedScriptPath_File $MyInvocation.MyCommand.Path;
-
-#Auxiliary variables - enable verification in the calling script:
+# Store scritp path in a variable in order to enable later verifications:
 $ExecutedScriptPath_File = $MyInvocation.MyCommand.Path
 
 # Auxiliary definitions:
