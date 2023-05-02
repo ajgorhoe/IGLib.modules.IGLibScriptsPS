@@ -1,6 +1,6 @@
 
 # Helper utilities for dealing with reopsitories
-# https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git
+# https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git
 
 # Execute definitions from other files:
 . $(Join-Path "$PSScriptRoot" "File.ps1")
@@ -58,7 +58,7 @@ function GetGitBranch($DirectoryPath = ".")
 		Write-Host "`nGetGitBranch(): not a Git working directory.`n"
 		return $null
 	}
-	$InitialDir = $(pwd).Path
+	$InitialDir = $(Get-Location).Path
 	$ret = $null
 	try {
 		if ("$DirectoryPath" -ne "") { cd "$DirectoryPath" }
@@ -81,7 +81,7 @@ function GetGitCommit($DirectoryPath = ".", $ShortLength)
 		Write-Host "`nGetGitCommit(): not a Git working directory.`n"
 		return $null
 	}
-	$InitialDir = $(pwd).Path
+	$InitialDir = $(Get-Location).Path
 	$ret = $null
 	try {
 		if ("$DirectoryPath" -ne "") { cd "$DirectoryPath" }
