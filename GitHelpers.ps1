@@ -61,14 +61,14 @@ function GetGitBranch($DirectoryPath = ".")
 	$InitialDir = $(Get-Location).Path
 	$ret = $null
 	try {
-		if ("$DirectoryPath" -ne "") { cd "$DirectoryPath" }
+		if ("$DirectoryPath" -ne "") { Set-Location "$DirectoryPath" }  # { cd ... }
 		$ret = $(git rev-parse --abbrev-ref HEAD)
 	}
 	catch {
 		Write-Host "ERROR in GetGitBranch(): $($_.Exception.Message)`n"
 	}
 	finally {
-		cd "$InitialDir"
+		Set-Location "$InitialDir"  # cd ...
 	}
 	return $ret
 }
@@ -95,7 +95,7 @@ function GetGitCommit($DirectoryPath = ".", $ShortLength)
 		Write-Host "`nERROR in GetGitCommit(): $($_.Exception.Message)`n"
 	}
 	finally {
-		cd "$InitialDir"
+		Set-Location "$InitialDir"  # cd ...
 	}
 	return $ret
 }
@@ -132,8 +132,8 @@ function GitClone ($RepositoryAddress = $null,
 
 function GitUpdate ($CloneDirectory = ".", $BranchCommitOrTag = $null )
 {
-	$InitialDir = $(pwd).Path
-	$ret = $null
+	$InitialDir = $(Get-Location).Path  # (pwd).Path
+	# $ret = $null
 	if ("$CloneDirectory" -eq "") { $CloneDirectory = "." }
 	if (-not (IsGitWorkingDirectory "$CloneDirectory"))
 	{
@@ -142,7 +142,7 @@ function GitUpdate ($CloneDirectory = ".", $BranchCommitOrTag = $null )
 	}
 	try 
 	{
-		cd "$CloneDirectory"
+		Set-Location "$CloneDirectory"  # cd ...
 		if ("$BranchCommitOrTag" -eq "")
 		{
 			# branch not specified
@@ -158,7 +158,7 @@ function GitUpdate ($CloneDirectory = ".", $BranchCommitOrTag = $null )
 		catch {   }
 		return 
 	}
-	finally { cd "$InitialDir"  }
+	finally { Set-Location "$InitialDir"  }  # cd ...
 }
 
 function GitCloneOrUpdate($RepositoryAddress = $null, 
@@ -175,7 +175,7 @@ function GitCloneOrUpdate($RepositoryAddress = $null,
 	$BranchTagOrCommit=$null)
 # Returns a set of parts of the string version of form "1.2.3.4"
 {
-	if ($versionString -eq $null -or $versionString -eq "") 
+	if ($null -eq $versionString -or $versionString -eq "") 
 	{ $versionString = "1.0.0.0" }
 	return $versionString.Replace(".",",").Split(",")
 }
