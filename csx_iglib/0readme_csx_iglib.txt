@@ -1,6 +1,7 @@
 
 
 Scripting tool:
+https://github.com/dotnet-script/dotnet-script
 https://github.com/filipw/dotnet-script
 
 To install the scripting global tool, run: 
@@ -12,7 +13,8 @@ Then for interactive scripting console, run:
 To interpet a file (in this case, the test-nuget.csx):
   dotnet script  test-nuget.csx
 
-
+Remark: some scripts are available in IGLib Sandbox directory:
+https://github.com/ajgorhoe/IGLib.workspace.base.igsandbox.git
 
 
 
