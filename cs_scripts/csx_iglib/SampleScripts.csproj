@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--
+    netcoreapp3.1   net5.0
+    -->
+    <TargetFrameworks>net6.0;net48;;netstandard2.0</TargetFrameworks>
+    <RootNamespace>IG.Script</RootNamespace>
+  </PropertyGroup>
+
+  <!--
+  <ItemGroup>
+    <Compile Remove="scripts\**" />
+    <EmbeddedResource Remove="scripts\**" />
+    <None Remove="scripts\**" />
+    <None Remove="dependency.cs" />
+    <CSFile Include="*.cs" Exclude="dependency.cs"/>
+  </ItemGroup>
+  -->
+  
+  <ItemGroup><!--
+      See: 
+      https://docs.microsoft.com/en-us/visualstudio/msbuild/how-to-exclude-files-from-the-build?view=vs-2019
+      https://stackoverflow.com/questions/43173811/how-do-i-exclude-files-folders-from-a-net-core-standard-project
+      <Compile Remove="dependency.cs" />
+      <Compile Remove="dependency.cs" Condition=" '$(Configuration)' == 'Debug' " />
+      <Compile Remove="dependency.cs" />
+    -->
+
+    <Compile Remove="dependency.cs" />
+  </ItemGroup>
+
+</Project>

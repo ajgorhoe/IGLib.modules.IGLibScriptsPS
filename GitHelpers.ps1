@@ -1,19 +1,21 @@
 
 # Helper utilities for dealing with reopsitories
-# https://github.com/ajgorhoe/IGLib.modules.IGLibScripts.git
+# https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git
 
-alias GitRoot GetGitRoot
-alias GitBranch GetGitBranch
-alias GitCommit GetGitCommit
-alias ShortGitCommit GetShortGitCommit
-alias GitShortCommit GetShortGitCommit
-
-
-#Auxiliary variables - enable verification in the calling script:
-$ScriptHasRun_GitHelpers = $true
-$ScriptDirectory_GitHelpers = $PSScriptRoot
-
+# Execute definitions from other files:
 . $(Join-Path "$PSScriptRoot" "File.ps1")
+
+# Check whether the current script has already been executed before:
+CheckScriptExecuted $ExecutedScriptPath_GitHelpers $MyInvocation.MyCommand.Path;
+# Store scritp path in a variable in order to enable later verifications:
+$ExecutedScriptPath_GitHelpers = $MyInvocation.MyCommand.Path
+
+Set-Alias GitRoot GetGitRoot
+Set-Alias GitBranch GetGitBranch
+Set-Alias GitCommit GetGitCommit
+Set-Alias ShortGitCommit GetShortGitCommit
+Set-Alias GitShortCommit GetShortGitCommit
+
 
 function IsGitRoot($DirectoryPath = ".")
 {
@@ -56,17 +58,17 @@ function GetGitBranch($DirectoryPath = ".")
 		Write-Host "`nGetGitBranch(): not a Git working directory.`n"
 		return $null
 	}
-	$InitialDir = $(pwd).Path
+	$InitialDir = $(Get-Location).Path
 	$ret = $null
 	try {
-		if ("$DirectoryPath" -ne "") { cd "$DirectoryPath" }
+		if ("$DirectoryPath" -ne "") { Set-Location "$DirectoryPath" }  # { cd ... }
 		$ret = $(git rev-parse --abbrev-ref HEAD)
 	}
 	catch {
 		Write-Host "ERROR in GetGitBranch(): $($_.Exception.Message)`n"
 	}
 	finally {
-		cd "$InitialDir"
+		Set-Location "$InitialDir"  # cd ...
 	}
 	return $ret
 }
@@ -79,7 +81,7 @@ function GetGitCommit($DirectoryPath = ".", $ShortLength)
 		Write-Host "`nGetGitCommit(): not a Git working directory.`n"
 		return $null
 	}
-	$InitialDir = $(pwd).Path
+	$InitialDir = $(Get-Location).Path
 	$ret = $null
 	try {
 		if ("$DirectoryPath" -ne "") { cd "$DirectoryPath" }
@@ -93,7 +95,7 @@ function GetGitCommit($DirectoryPath = ".", $ShortLength)
 		Write-Host "`nERROR in GetGitCommit(): $($_.Exception.Message)`n"
 	}
 	finally {
-		cd "$InitialDir"
+		Set-Location "$InitialDir"  # cd ...
 	}
 	return $ret
 }
@@ -130,8 +132,8 @@ function GitClone ($RepositoryAddress = $null,
 
 function GitUpdate ($CloneDirectory = ".", $BranchCommitOrTag = $null )
 {
-	$InitialDir = $(pwd).Path
-	$ret = $null
+	$InitialDir = $(Get-Location).Path  # (pwd).Path
+	# $ret = $null
 	if ("$CloneDirectory" -eq "") { $CloneDirectory = "." }
 	if (-not (IsGitWorkingDirectory "$CloneDirectory"))
 	{
@@ -140,7 +142,7 @@ function GitUpdate ($CloneDirectory = ".", $BranchCommitOrTag = $null )
 	}
 	try 
 	{
-		cd "$CloneDirectory"
+		Set-Location "$CloneDirectory"  # cd ...
 		if ("$BranchCommitOrTag" -eq "")
 		{
 			# branch not specified
@@ -156,7 +158,7 @@ function GitUpdate ($CloneDirectory = ".", $BranchCommitOrTag = $null )
 		catch {   }
 		return 
 	}
-	finally { cd "$InitialDir"  }
+	finally { Set-Location "$InitialDir"  }  # cd ...
 }
 
 function GitCloneOrUpdate($RepositoryAddress = $null, 
@@ -173,7 +175,7 @@ function GitCloneOrUpdate($RepositoryAddress = $null,
 	$BranchTagOrCommit=$null)
 # Returns a set of parts of the string version of form "1.2.3.4"
 {
-	if ($versionString -eq $null -or $versionString -eq "") 
+	if ($null -eq $versionString -or $versionString -eq "") 
 	{ $versionString = "1.0.0.0" }
 	return $versionString.Replace(".",",").Split(",")
 }
