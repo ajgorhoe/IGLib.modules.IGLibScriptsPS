@@ -1,3 +1,4 @@
+#!/usr/bin/env dotnet-script
 
 using System.IO;
 using System.Reflection;
