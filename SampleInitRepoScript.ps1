@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 
 # A sample script for initialization of repositories. You can adapt it for
 # specific needs. Can also be used for testing.

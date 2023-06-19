@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 
 # Common utilities used in other scripts.
 # https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git

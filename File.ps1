@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 
 # Helper utilities for dealing with file paths and other file system related tasks
 # https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git
