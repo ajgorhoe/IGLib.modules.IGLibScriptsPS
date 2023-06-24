@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 
 # Powershell info and helper utilities
 # https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git
@@ -5,9 +6,15 @@
 # Remark: make sure you have set the execution policy correctly, e.g. (as admin.):
 #   Set-ExecutionPolicy RemoteSigned
 
-#Auxiliary variables - enable verification in the calling script:
-$ScriptHasRun_PowerShellInfo = $true
-$ScriptDirectory_PowerShellInfo = $PSScriptRoot
+# Execute definitions from other files:
+. "$(Join-Path "$PSScriptRoot" "Common.ps1")"
+
+# Check whether the current script has already been executed before:
+CheckScriptExecuted $ExecutedScriptPath_PowerShellInfo $MyInvocation.MyCommand.Path;
+# Store scritp path in a variable in order to enable later verifications:
+$ExecutedScriptPath_PowerShellInfo = $MyInvocation.MyCommand.Path
+
+
 
 # Auxiliary definitions:
 Set-Alias print Write-Host
