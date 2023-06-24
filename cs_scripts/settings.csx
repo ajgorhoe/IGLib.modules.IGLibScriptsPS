@@ -1,3 +1,4 @@
+#!/usr/bin/env dotnet-script
 
 #load "tools.csx"
 

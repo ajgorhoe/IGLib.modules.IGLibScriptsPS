@@ -1,10 +1,9 @@
+#!/usr/bin/env dotnet-script
 
-
+#load "tstdev.csx"
 
 using System;
 
-
-#load "tstdev.csx"
 
 Console.WriteLine($"\nFrom rst.csx:\n");
 

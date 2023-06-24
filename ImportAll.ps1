@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 
 # Executes all utility scripts in the current directory, in order to import all the definitions
 # https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git

@@ -1,3 +1,4 @@
+#!/usr/bin/env dotnet-script
 
 #region References
 
@@ -316,7 +317,7 @@ public static string GetBinaryDir(string projectPath, bool forceRelease = false)
 #endif
 
 
-env["hasbeenloaded_baseref"] = "true";
+env["hasbeenloaded_tools"] = "true";
 
 
 

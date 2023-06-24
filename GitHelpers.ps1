@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 
 # Helper utilities for dealing with reopsitories
 # https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git

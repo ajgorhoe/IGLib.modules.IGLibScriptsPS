@@ -1,3 +1,4 @@
+#!/usr/bin/env pwsh
 
 # Powershell info and helper utilities
 # https://github.com/ajgorhoe/IGLib.modules.IGLibScriptsPS.git
