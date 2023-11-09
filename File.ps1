@@ -60,6 +60,18 @@ function GetAbsolutePath($Path = $null)
 	return $(Resolve-Path "$Path").Path;
 }
 
+<#
+.Synopsis
+Returns the filaname part of the specific file path.
+.Description
+Returns the filaname part of the specific file path. This function does not 
+check whether the $Path parameter actually contains a path of an existing 
+file, and operates merely on path-as-string basis. For example, if $Path
+is a path of an existing directory, then this function will just return the
+name of the last level of the directory.
+.Parameter Path
+Specifies the file name.
+#>
 function GetFileName($Path = ".")
 {
 	if ("$Path" -eq "") { $Path = "." }

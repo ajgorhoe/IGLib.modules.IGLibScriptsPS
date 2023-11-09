@@ -105,6 +105,12 @@ function WifiDisplayWeakWarning($RequiredStrengthPercent=80)
 
 ######    Wi-Fi networks (detectable)
 
+<#
+.Synopsis
+Returns information on available Wi-Fi networks in string form.
+.Description
+See .Synopsis.
+#>
 function GetAvailableWifiNetworksStr()
 {
 	$ret=netsh wlan show networks mode=bssid
@@ -113,7 +119,7 @@ function GetAvailableWifiNetworksStr()
 
 <#
 .Synopsis
-Returns an array of available Wi-Fi networks.
+Returns an array of available Wi-Fi networks information.
 .Description
 See .Synopsis.
 #>
