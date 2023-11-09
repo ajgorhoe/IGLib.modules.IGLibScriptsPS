@@ -7,6 +7,12 @@
             #                       #
             #########################
 
+# Remarks:
+# Wi-Fi utilities are for Windows platforms.
+# See e.g.:
+# https://www.windowscentral.com/how-determine-wi-fi-signal-strength-windows-10#wifi_signal_strength_powershell
+# https://woshub.com/check-wi-fi-signal-strength-windows/
+
 
 ######    Wi-Fi connections
 
@@ -101,8 +107,8 @@ function WifiDisplayWeakWarning($RequiredStrengthPercent=80)
 
 function GetAvailableWifiNetworksStr()
 {
-	$cmd=netsh wlan show networks mode=bssid
-	return $cmd
+	$ret=netsh wlan show networks mode=bssid
+	return $ret
 }
 
 <#
@@ -115,41 +121,41 @@ function GetAvailableWifiNetworks()
 {
 	$entries=@()
 	$date=Get-Date
-	$cmd=netsh wlan show networks mode=bssid
-	$n=$cmd.Count
+	$cmdRes=netsh wlan show networks mode=bssid
+	$n=$cmdRes.Count
 	For($i=0; $i -lt $n; $i++)
 	{
-		If($cmd[$i] -Match '^SSID[^:]+:.(.*)$')
+		If($cmdRes[$i] -Match '^SSID[^:]+:.(.*)$')
 		{
 			$ssid=$Matches[1]
 			$i++
-			$bool=$cmd[$i] -Match 'Type[^:]+:.(.+)$'
+			$bool=$cmdRes[$i] -Match 'Type[^:]+:.(.+)$'
 			$Type=$Matches[1]
 			$i++
-			$bool=$cmd[$i] -Match 'Authentication[^:]+:.(.+)$'
+			$bool=$cmdRes[$i] -Match 'Authentication[^:]+:.(.+)$'
 			$authent=$Matches[1]
 			$i++
-			$bool=$cmd[$i] -Match 'Cipher[^:]+:.(.+)$'
+			$bool=$cmdRes[$i] -Match 'Cipher[^:]+:.(.+)$'
 			$chiffrement=$Matches[1]
 			$i++
-			While($cmd[$i] -Match 'BSSID[^:]+:.(.+)$')
+			While($cmdRes[$i] -Match 'BSSID[^:]+:.(.+)$')
 			{
 				$bssid=$Matches[1]
 				$i++
-				$bool=$cmd[$i] -Match 'Signal[^:]+:.(.+)$'
+				$bool=$cmdRes[$i] -Match 'Signal[^:]+:.(.+)$'
 				$signal=$Matches[1]
 				$i++
-				$bool=$cmd[$i] -Match 'Type[^:]+:.(.+)$'
+				$bool=$cmdRes[$i] -Match 'Type[^:]+:.(.+)$'
 				$radio=$Matches[1]
 				$i++
-				$bool=$cmd[$i] -Match 'Channel[^:]+:.(.+)$'
+				$bool=$cmdRes[$i] -Match 'Channel[^:]+:.(.+)$'
 				$Channel=$Matches[1]
 				$i=$i+2
 				$entries+=[PSCustomObject]@{ssid=$ssid;Authentication=$authent;Cipher=$chiffrement;bssid=$bssid;signal=$signal;radio=$radio;Channel=$Channel}
 			}
 		}
 	}
-	$cmd=$null
+	$cmdRes=$null
 	$entries 
 	# | Out-String
 }
@@ -161,48 +167,11 @@ Displays information on available Wi-Fi networks in a grid view.
 .Description
 See .Synopsis.
 #>
-function WifiDisplayAwailableGridView11() 
+function WifiDisplayAwailableGridView() 
 {
-	$entries=@()
-	$date=Get-Date
-	$cmd=netsh wlan show networks mode=bssid
-	$n=$cmd.Count
-	For($i=0; $i -lt $n; $i++)
-	{
-		If($cmd[$i] -Match '^SSID[^:]+:.(.*)$')
-		{
-			$ssid=$Matches[1]
-			$i++
-			$bool=$cmd[$i] -Match 'Type[^:]+:.(.+)$'
-			$Type=$Matches[1]
-			$i++
-			$bool=$cmd[$i] -Match 'Authentication[^:]+:.(.+)$'
-			$authent=$Matches[1]
-			$i++
-			$bool=$cmd[$i] -Match 'Cipher[^:]+:.(.+)$'
-			$chiffrement=$Matches[1]
-			$i++
-			While($cmd[$i] -Match 'BSSID[^:]+:.(.+)$')
-			{
-				$bssid=$Matches[1]
-				$i++
-				$bool=$cmd[$i] -Match 'Signal[^:]+:.(.+)$'
-				$signal=$Matches[1]
-				$i++
-				$bool=$cmd[$i] -Match 'Type[^:]+:.(.+)$'
-				$radio=$Matches[1]
-				$i++
-				$bool=$cmd[$i] -Match 'Channel[^:]+:.(.+)$'
-				$Channel=$Matches[1]
-				$i=$i+2
-				$entries+=[PSCustomObject]@{date=$date;ssid=$ssid;Authentication=$authent;Cipher=$chiffrement;bssid=$bssid;signal=$signal;radio=$radio;Channel=$Channel}
-			}
-		}
-	}
-	$cmd=$null
-	$entries | Out-GridView -Title 'Available Wi-Fi networks'
+	$ret = $(GetAvailableWifiNetworks)
+	$ret | Out-GridView -Title 'Available Wi-Fi networks'
 }
-
 
 
 
