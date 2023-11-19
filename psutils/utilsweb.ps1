@@ -1,6 +1,163 @@
 
 
 
+            #######################
+            #                     #
+            #    Web Utilities    #
+            #                     #
+            #######################
+
+# Remarks:
+# Useful snippets in PowerShell:
+# https://techexpert.tips/powershell/powershell-display-connected-usb-storage-devices/
+
+
+
+
+            ######################
+            #                    #
+            #    System state    #
+            #                    #
+            ######################
+
+
+<#
+.Synopsis
+Gets a list of running processes.
+.Description
+See .Synopsis.
+.Parameter NameContains
+If specified (not $null) then only those processes are listed that contain 
+the $NameContains in their process name.
+#>
+function GetProcesses($NameContains=$null)
+{
+	if ($NameContains -ne $null)
+	{
+		$ret = Get-Process | Where-Object { $_.ProcessName `
+			-match "$NameContains" }
+			
+	} else {
+		$ret = Get-Process
+	}
+	return $ret;
+}
+
+
+            ############################
+            #                          #
+            #    Hardware Utilities    #
+            #                          #
+            ############################
+
+
+<#
+
+function GetDrives($Verbose = $False)
+{
+	if ($Verbose)
+	{
+		$ret = [System.IO.DriveInfo]::getdrives() | Format-List
+	} else
+	{
+		$ret = [System.IO.DriveInfo]::getdrives() |
+		Select-Object -Property RootDirectory, IsReady, DriveType, DriveFormat,
+		@{
+			label='TotalSizeGB'
+			expression={($_.TotalSize/1GB).ToString('F2')}
+		}, 
+		@{
+			label='FreeSpaceGB'
+			expression={($_.AvailableFreeSpace/1GB).ToString('F2')}
+		}, 
+		@{
+			label='FreeSpacePercent'
+			expression={(100*$_.AvailableFreeSpace/$_.TotalSize).ToString('F2') + "%"}
+		}
+		# Name, 
+	}
+	return $ret;
+}
+
+#>
+
+
+<#
+.Synopsis
+Gets a list of computer's devices.
+.Description
+See .Synopsis.
+.Parameter Verbose
+If $true then all informatiov on devices is included in the list. If $false
+then only the basic information is included.
+#>
+function GetDevices($Verbose = $False)
+{
+	if ($Verbose)
+	{
+		$ret = Get-PnpDevice -PresentOnly | Where-Object { $_.InstanceId -match '^USB' } | Format-List
+	} else
+	{
+		$ret = Get-PnpDevice -PresentOnly | Where-Object { $_.InstanceId -match '^USB' }
+	}
+	return $ret;
+}
+
+
+<#
+.Synopsis
+Gets a list of connected USB devices.
+.Description
+See .Synopsis.
+.Parameter Verbose
+If $true then complete information on devices is included in the list. If $false
+then only the basic information is included.
+#>
+function GetUsbDevices($Verbose = $False)
+{
+	if ($Verbose)
+	{
+		$ret = Get-PnpDevice -PresentOnly | Where-Object { $_.InstanceId -match '^USB' } | Format-List
+	} else
+	{
+		$ret = Get-PnpDevice -PresentOnly | Where-Object { $_.InstanceId -match '^USB' }
+	}
+	return $ret;
+}
+
+
+<#
+.Synopsis
+Gets a list of connected USB controllers.
+.Description
+See .Synopsis.
+.Parameter Verbose
+If $true then all information on controllers is included in the list. If $false
+then only the basic information is provided.
+#>
+function GetUsbControllers($Verbose = $False)
+{
+	if ($Verbose)
+	{
+		$ret = Get-WmiObject -Query "SELECT * FROM Win32_USBController"
+	} else
+	{
+		$ret = Get-WmiObject -Query "SELECT * FROM Win32_USBController" |
+			Select-Object `
+			Name, Description, `
+			Manufacturer, `
+			Status `
+			| Format-List
+			#Caption, `
+			#Manufacturer `
+			#PNPDeviceID, `
+	}
+	return $ret;
+}
+
+
+
+
             #########################
             #                       #
             #    Wi-Fi utilities    #
